@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'IndexDrying',
         name: 'IndexDrying',
-        component: () => import(`@/views/IndexDrying/index`)
+        component: () => import(`@/views/IndexDrying/index.vue`)
       },
     ]
   }

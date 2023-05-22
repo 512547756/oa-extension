@@ -57,6 +57,7 @@ export default function useChangeTable(tempType: string) {
     return <a-input v-model:value={data[_rowIndex][column.field]}></a-input>
   }
 
+
    // 用来计算算完成率
   const divisionNum = (a: string, b: string) => {
     const res = Number(b) / Number(a)
