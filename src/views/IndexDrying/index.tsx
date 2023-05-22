@@ -4,7 +4,7 @@ import useChangeTable from './hooks/useChangeTable'
 import TableTemp from './components/tableTemp'
 
 export default defineComponent({
-  name: 'Overview',
+  name: 'IndexDryingDetail',
   setup() {
     const tempProps = useChangeTable('temp2')
     const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)

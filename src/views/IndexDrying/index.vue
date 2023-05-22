@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script lang="ts" setup name="">
+<script lang="ts" setup name="IndexDryingDetail">
 import useInitTable from '../IndexDrying/hooks/useInitTable'
 import useChangeTable from './hooks/useChangeTable'
 import TableTemp from './components/tableTemp'
@@ -40,7 +40,7 @@ qnmbRow.yy = 3
 qnmbRow.cx = 3
 qnmbRow.nh = 3
 qnmbRow.xs = 3
-qnmbRow.qwxq = 3
+qnmbRow.qwxq = 322
 qnmbRow.gxq = 3
 qnmbRow.dqh = 3
 qnmbRow.qshj = 3
