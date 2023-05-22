@@ -32,6 +32,7 @@
     "pinia": "^2.0.32",
     "pinia-plugin-persist": "^1.0.0",
     "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vxe-table": "^4.3.14",

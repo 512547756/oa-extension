@@ -35,6 +35,7 @@ specifiers:
   typescript: ~4.8.4
   vite: ^4.1.4
   vite-plugin-compression: ^0.5.1
+  vite-plugin-vue-setup-extend: ^0.4.0
   vue: ^3.2.47
   vue-router: ^4.1.6
   vue-tsc: ^1.2.0
@@ -60,6 +61,7 @@ dependencies:
   pinia: 2.1.1_typescript@4.8.4+vue@3.3.4
   pinia-plugin-persist: 1.0.0_pinia@2.1.1+vue@3.3.4
   vite-plugin-compression: 0.5.1_vite@4.3.7
+  vite-plugin-vue-setup-extend: 0.4.0_vite@4.3.7
   vue: 3.3.4
   vue-router: 4.2.0_vue@3.3.4
   vxe-table: 4.3.14_vue@3.3.4+xe-utils@3.5.7
@@ -3338,6 +3340,12 @@ packages:
     dependencies:
       yallist: 4.0.0
 
+  /magic-string/0.25.9:
+    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
+    dependencies:
+      sourcemap-codec: 1.4.8
+    dev: false
+
   /magic-string/0.30.0:
     resolution: {integrity: sha512-LA+31JYDJLs82r2ScLrlz1GjSgu66ZV518eyWT+S8VhyQn/JL0u9MeBOvQMGYiPk1DBiSN9DDMOcXvigJZaViQ==}
     engines: {node: '>=12'}
@@ -4268,6 +4276,11 @@ packages:
     requiresBuild: true
     optional: true
 
+  /sourcemap-codec/1.4.8:
+    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
+    dev: false
+
   /spdx-correct/3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
     dependencies:
@@ -4670,6 +4683,16 @@ packages:
       vite: 4.3.7_l7vjwealf3j564fn3uq3pbs3je
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /vite-plugin-vue-setup-extend/0.4.0_vite@4.3.7:
+    resolution: {integrity: sha512-WMbjPCui75fboFoUTHhdbXzu4Y/bJMv5N9QT9a7do3wNMNHHqrk+Tn2jrSJU0LS5fGl/EG+FEDBYVUeWIkDqXQ==}
+    peerDependencies:
+      vite: '>=2.0.0'
+    dependencies:
+      '@vue/compiler-sfc': 3.3.4
+      magic-string: 0.25.9
+      vite: 4.3.7_l7vjwealf3j564fn3uq3pbs3je
     dev: false
 
   /vite/4.3.7_l7vjwealf3j564fn3uq3pbs3je:
