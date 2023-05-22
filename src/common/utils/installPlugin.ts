@@ -3,7 +3,9 @@ import NProgress from 'nprogress'
 import router from '@/router'
 import pinia from '@/stores'
 import type { App } from 'vue'
+import VXETable from 'vxe-table'
 
+import 'vxe-table/lib/style.css'
 import 'ant-design-vue/dist/antd.variable.less'
 import '@/assets/css/global.css'
 import '@/assets/css/tailwind.css'
@@ -11,7 +13,7 @@ import '@/assets/css/tailwind.css'
 // Vue插件安装
 export default (app: App<Element>) => {
   NProgress.configure({ easing: 'ease', speed: 500 })
-
+  app.use(VXETable)
   app.use(Antd)
   app.use(router)
   app.use(pinia)
