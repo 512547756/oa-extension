@@ -71,7 +71,6 @@ export default defineComponent({
     const forward = forwardImg
 
     const submit = () => {
-      console.log(basicInfoRef.value.form.metricType)
       basicInfoRef.value.onCheck()
     }
     const { columns, dataSource, getDataSource } = finishDataHook()
@@ -79,7 +78,6 @@ export default defineComponent({
     const getMetricType = (getMetricType: string) => {
       MetricType.value = getMetricType
       getDataSource(getMetricType)
-      console.log('MetricType.value', MetricType.value)
     }
 
     return {

@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import {isUndefined} from 'lodash'
 
 import styles from './tableTemp.module.less'
@@ -54,11 +54,20 @@ export default defineComponent({
       data: []
     })
 
+    watch(
+        props,
+        (newData) => {
+            gridOptions.data = newData.data
+            gridOptions.columns = newData.columns
+        },
+        {deep: true, immediate: true}
+    )
 
-    // eslint-disable-next-line vue/no-setup-props-destructure
-    gridOptions.data = props.data
-    // eslint-disable-next-line vue/no-setup-props-destructure
-    gridOptions.columns = props.columns
+
+    // // eslint-disable-next-line vue/no-setup-props-destructure
+    // gridOptions.data = props.data
+    // // eslint-disable-next-line vue/no-setup-props-destructure
+    // gridOptions.columns = props.columns
 
     return () => (
         <vxe-grid class={styles['reverse-table']} {...gridOptions}>

@@ -11,7 +11,6 @@ interface TempObj {
 }
 
 export default function useChangeTable(tempType: string) {
-  console.log('tempType', tempType)
   const cellFormatter = ({ row, column, rowIndex }: any, temp3: boolean = false) => {
     if (!row[column.field]) {
       // 如果没有数据

@@ -109,7 +109,8 @@ export default defineComponent({
     /**类型列表 */
     const typeList: any = ref([
       { label: '模版一', value: 'temp1' },
-      { label: '模版二', value: 'temp2' }
+      { label: '模版二', value: 'temp2' },
+      { label: '模版三', value: 'temp3' },
     ])
     /**责任处室列表 */
     const responsibilityDivisiontypeList = ref()
