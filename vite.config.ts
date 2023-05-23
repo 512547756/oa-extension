@@ -52,15 +52,19 @@ export default ({ mode }: any) =>
         'Access-Control-Allow-Origin': '*'
       },
       proxy: {
-        '/api': {
+        '/SevenList': {
           // @ts-ignore
           target: loadEnv(mode, process.cwd()).VITE_APP_SERVER_URL,
           changeOrigin: true,
-          ws: true, //websocket支持
-          secure: true, // 如果是https接口，需要配置这个参数
-          rewrite: (path) => path.replace(/^\/api/, '/api')
+          ws: false, //websocket支持
+          secure: false, // 如果是https接口，需要配置这个参数
+          rewrite: (path) => {
+            console.log('进入代理',path, loadEnv(mode, process.cwd()).VITE_APP_SERVER_URL)
+           return path.replace(/^\/SevenList/, '/SevenList')
+          }
         }
       }
+
     },
     // 打包配置
     build: {

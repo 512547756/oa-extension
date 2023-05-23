@@ -37,6 +37,8 @@ import { defineComponent, ref, onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import homeTableHook from '@/hooks/homeTableHook'
 import type { VxeGridProps, VxePagerEvents } from 'vxe-table'
+import { getIndexDryingList, getIndexDryingDetail, getIndexDryingWorkList } from '@/api/IndexDrying/index'
+
 export default defineComponent({
   name: 'HomeTable',
   emits: ['changeVisiable'],
@@ -46,6 +48,24 @@ export default defineComponent({
     const listInfo = ref()
     // const columns = ref()
     // const dataSource = ref()
+
+
+
+    // 获取表格数据
+    const queryData = async (data: any) => {
+       let res =  await getIndexDryingList(data)
+    //    let res1 = await getIndexDryingDetail(21)
+    //    let res1 = await getIndexDryingWorkList(data)
+       console.log(res)
+    }
+
+    queryData({
+        pageIndex: 1,
+        pageSize: 10,
+        keyword: '',
+    })
+
+
 
     const { columns, newDataSource, mergeCells, loading, pageLength, getMergeCells, changePage } =
       homeTableHook()

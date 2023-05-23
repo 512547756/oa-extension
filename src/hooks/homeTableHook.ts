@@ -173,7 +173,7 @@ export default function finishDataHook() {
   const dataSource = ref<any>([
     {
       id: '1234',
-      workTasks: '实现公租房保障',
+      workTasks: '实现公租房保障11',
       metricType: '类型一',
       responsibilityDivision: '轨空处',
       leaderShip: '小明',
@@ -200,7 +200,7 @@ export default function finishDataHook() {
       ]
     },
     {
-      workTasks: '城市更新',
+      workTasks: '城市更新223',
       finishInfo: [
         {
           index: '2',
