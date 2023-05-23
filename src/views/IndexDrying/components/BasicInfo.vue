@@ -1,6 +1,6 @@
 <template>
-  <a-card v-if="disable" title="基础信息">
-    {{ form }}
+  <a-card title="基础信息">
+    {{ form.metricType }}
     <a-form :rules="rule" :model="form" ref="formRef" labelAlign="right">
       <a-row type="flex" justify="center" :gutter="100">
         <a-col>
@@ -89,14 +89,14 @@ export default defineComponent({
   },
   props: {
     disable: {
-      default: () => ({})
+      default: () => false
     }
   },
   name: 'App',
   emit: ['getMetricType'],
   setup(props, { emit }) {
     const form = ref<any>({
-      // metricType: '',
+      // metricType: 'temp1',
       // workTasks: '',
       // responsibilityDivision: '',
       // leaderShip: '',
@@ -108,8 +108,8 @@ export default defineComponent({
 
     /**类型列表 */
     const typeList: any = ref([
-      { label: '模版一', value: '1' },
-      { label: '模版二', value: '2' }
+      { label: '模版一', value: 'temp1' },
+      { label: '模版二', value: 'temp2' }
     ])
     /**责任处室列表 */
     const responsibilityDivisiontypeList = ref()
@@ -198,7 +198,6 @@ export default defineComponent({
     watch(
       () => form.value.metricType,
       () => {
-        console.log('getMetricType', form.value.metricType)
         emit('getMetricType', form.value.metricType)
       },
       {
@@ -210,18 +209,17 @@ export default defineComponent({
 
     const getListInfo = () => {
       form.value = history.state.params
-      console.log('form.value', history.state.params)
     }
     getListInfo()
     watch(
       () => router.currentRoute.value.path,
       (toPath) => {
-        console.log('router.currentRoute.value.path', router.currentRoute.value.path)
         if (router.currentRoute.value.path === '/DryingDetail') {
           getListInfo() //要执行的方法
         }
         if (router.currentRoute.value.path === '/IndexDrying') {
-          form.value = []
+          // eslint-disable-next-line no-self-assign
+          form.value = { metricType: 'temp1' }
         }
       },
       { immediate: true, deep: true }

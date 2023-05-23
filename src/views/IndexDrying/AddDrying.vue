@@ -20,7 +20,7 @@
       <!-- <complicated-table></complicated-table> -->
       <!-- <TableFromOne v-if="MetricType == '1'" />
       <TableFromTwo v-if="MetricType == '2'" /> -->
-      <index></index>
+      <index :getMetricType="MetricType"></index>
       <!-- 点评备注 -->
       <a-form
         :model="textArea"
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import finishDataHook from '@/hooks/finishDataHook'
 import BasicInfo from './components/BasicInfo.vue'
 import Index from './index.vue'
@@ -79,7 +79,7 @@ export default defineComponent({
     const getMetricType = (getMetricType: string) => {
       MetricType.value = getMetricType
       getDataSource(getMetricType)
-      console.log('dataSource', dataSource)
+      console.log('MetricType.value', MetricType.value)
     }
 
     return {

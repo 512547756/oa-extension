@@ -1,20 +1,30 @@
 <template>
   <div>
-    <TableTemp
-      v-model:data="dataSource"
-      v-model:columns="columns"
-      v-bind="tempProps"
-    ></TableTemp>
+    {{ props.getMetricType }}{{ tempProps }}
+    <TableTemp v-model:data="dataSource" v-model:columns="columns" v-bind="tempProps"></TableTemp>
   </div>
 </template>
 
 <script lang="ts" setup name="IndexDryingDetail">
+import { computed, watch, onUpdated } from 'vue'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
 import useChangeTable from './hooks/useChangeTable'
 import TableTemp from './components/tableTemp'
-
-const tempProps = useChangeTable('temp1')
+const props = defineProps({
+  getMetricType: {
+    type: String,
+    default: 'temp1'
+  }
+})
+let tempProps = useChangeTable(props.getMetricType)
 const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
+watch(
+  () => props.getMetricType,
+  () => {
+    tempProps = useChangeTable(props.getMetricType)
+    console.log('tempProps', tempProps)
+  }
+)
 
 tempProps.hasFullYearTarget = false // 如果有数据控制全年目标不让填写
 // 根据数据填充全年目标
