@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{ dataSource1 }}{{ columns1 }}
+    <!-- {{ dataSource1 }}{{ columns1 }} -->
+    {{ tempProps }}
     <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
   </div>
 </template>
@@ -29,6 +30,7 @@ watch(
   () => props.getMetricType,
   () => {
     tempProps = useChangeTable(props.getMetricType)
+    console.log(tempProps)
     initTable(tempProps)
   },
   {

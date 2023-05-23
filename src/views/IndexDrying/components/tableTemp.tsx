@@ -40,7 +40,7 @@ export default defineComponent({
       showOverflow: true,
       // height: 400,
       showHeader: true,
-      showFooter: !isUndefined(props.footerMethod),
+      showFooter: false,
       keepSource: true,
       footerMethod: props.footerMethod,
       footerCellClassName: styles.footerCell,
@@ -59,6 +59,12 @@ export default defineComponent({
         (newData) => {
             gridOptions.data = newData.data
             gridOptions.columns = newData.columns
+            gridOptions.showFooter = false
+            if(!isUndefined(newData.footerMethod)) {
+                gridOptions.showFooter = true
+                gridOptions.footerMethod = newData.footerMethod
+            } 
+            
         },
         {deep: true, immediate: true}
     )
