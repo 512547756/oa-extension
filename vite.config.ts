@@ -4,7 +4,7 @@ import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
-import path from 'path';
+import path from 'path'
 import {
   OUTPUT_DIR,
   reportCompressedSize,
@@ -32,7 +32,10 @@ export default ({ mode }: any) =>
     css: {
       preprocessorOptions: {
         less: {
-          additionalData: `@import "${path.resolve(__dirname, 'src/assets/css/mixins/_main.less')}";`,
+          additionalData: `@import "${path.resolve(
+            __dirname,
+            'src/assets/css/mixins/_main.less'
+          )}";`,
           javascriptEnabled: true
         }
       }
@@ -52,13 +55,16 @@ export default ({ mode }: any) =>
         'Access-Control-Allow-Origin': '*'
       },
       proxy: {
-        '/api': {
+        '/SevenList': {
           // @ts-ignore
           target: loadEnv(mode, process.cwd()).VITE_APP_SERVER_URL,
           changeOrigin: true,
-          ws: true, //websocket支持
-          secure: true, // 如果是https接口，需要配置这个参数
-          rewrite: (path) => path.replace(/^\/api/, '/api')
+          ws: false, //websocket支持
+          secure: false, // 如果是https接口，需要配置这个参数
+          rewrite: (path) => {
+            console.log('进入代理', path, loadEnv(mode, process.cwd()).VITE_APP_SERVER_URL)
+            return path.replace(/^\/SevenList/, '/SevenList')
+          }
         }
       }
     },
