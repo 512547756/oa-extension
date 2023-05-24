@@ -1,26 +1,39 @@
 <!-- 往期数据 -->
 <template>
-  <a-table :columns="columns" :data-source="dataSource" bordered> </a-table>
+  {{ detailList }}
+  <!-- <a-table :columns="lastColumns" :dataSource="detailList" bordered> </a-table> -->
+  <vxe-table :data="detailList" border>
+    <!-- <vxe-column type="seq" width="60"></vxe-column> -->
+    <vxe-column v-for="(item, index) in lastColumns" :key="index" :field="item.key" :title="item.title"></vxe-column>
+  </vxe-table>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from 'vue'
-import lastDataHook from '@/hooks/lastDetailHook'
+import { defineComponent, ref, toRefs, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
   props: {
     detailList: {
-      default: () => ([])
-    }
+      type: Object,
+      default: () => ({})
+    },
+    lastColumns: {
+      type: Object,
+      default: () => ({})
+    },
   },
   name: 'LastDetail',
   setup(props) {
-    // const dataSource = ref()
-    const dataSource = computed(() => props.detailList)
-    const { columns } = lastDataHook()
+    const lastColumns = computed(() => props.lastColumns)
+    const { detailList } = toRefs(props)
+    const dataSource = ref()
 
     return {
-      columns,
-      dataSource
+      // eslint-disable-next-line vue/no-dupe-keys
+      detailList,
+      dataSource,
+      // eslint-disable-next-line vue/no-dupe-keys
+      lastColumns
     }
   }
 })

@@ -64,13 +64,10 @@
     </a-card>
 
     <a-card title="往期数据">
-      <last-detail></last-detail>
+      <last-detail :detailList="detailList" :lastColumns="lastColumns"></last-detail>
     </a-card>
 
     <a-card v-if="!disable" title="完成情况">
-      <!-- <complicated-table></complicated-table> -->
-      <!-- <TableFromOne v-if="MetricType == '1'" />
-      <TableFromTwo v-if="MetricType == '2'" /> -->
       <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
       <!-- 点评备注 -->
       <a-form :model="textArea" :label-col="{ span: 4 }" :wrapper-col="{ span: 13 }" style="margin-top: 15px">
@@ -92,11 +89,13 @@ import AgreeModal from './components/AgreeModal.vue'
 import TableTemp from './components/tableTemp'
 import workslist from './components/workList.json'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
-import useChangeTable from './hooks/useChangeTable'
+import useChangeTable, {divisionNum} from './hooks/useChangeTable'
+import lastDataHook from '@/hooks/lastDetailHook'
 import { useRoute, useRouter } from 'vue-router'
 import storageImg from '@/assets/storage.png'
 import forwardImg from '@/assets/forward.png'
-import { getIndexDryingDetail } from '@/api/IndexDrying/index'
+import { getIndexDryingDetail, indexDryingSubmit } from '@/api/IndexDrying/index'
+import useDataTransform  from './hooks/useDataTransform'
 
 const disable = computed(() => router.currentRoute.value.path === '/DryingDetail' ? true : false)
 
@@ -113,10 +112,18 @@ const router = useRouter()
 
 const formRef = ref()
 
+const detailList = ref()
+
+const { columns: lastColumns, taskList } = lastDataHook()
 const getListInfo = async (data: any) => {
   if (router.currentRoute.value.path !== '/IndexDrying') {
     let res = await getIndexDryingDetail(data)
+    console.log('getIndexDryingDetail-res', res)
     form.value = res
+    console.log('form.value', form.value.OtherList)
+    detailList.value = taskList(form.value)
+    // detailList.value = [{ ZH: '1' }]
+    console.log('detailList.value', detailList.value)
   }
 }
 
@@ -149,7 +156,7 @@ const typeList: any = ref([
 const storage = storageImg
 
 const forward = forwardImg
-let tempProps = {}
+let tempProps =  ref({})
 let dataSource1 = ref([])
 let columns1 = ref([])
 const agreeModalVisiable = ref(false)
@@ -165,6 +172,14 @@ const onCheck = async () => {
   try {
     const values = await formRef.value.validateFields()
     agreeModalVisiable.value = true
+    const basicInfo = Object.assign(form.value, textArea.value)
+    const detailList = {
+        columns: columns1.value,
+        data: dataSource1.value
+    }
+    const postData = useDataTransform(basicInfo, detailList, 1)
+    const res = await indexDryingSubmit(postData)
+    console.log(res)
     console.log('Success:', values)
   } catch (errorInfo) {
     console.log('Failed:', errorInfo)
@@ -177,11 +192,12 @@ const agreeModalFalse = () => {
 
 watch(
   () => form.value.StatTypeId,
-  () => {
+  newVal => {
+    tempProps.value = useChangeTable(newVal)
+    initTable(tempProps.value)
     if (router.currentRoute.value.path === '/IndexDrying') {
-      tempProps = useChangeTable(form.value.StatTypeId)
-      console.log(tempProps)
-      initTable(tempProps)
+      tempProps.value = useChangeTable(newVal)
+      initTable(tempProps.value)
     }
   },
   {
@@ -203,6 +219,24 @@ watch(
     immediate: true
   }
 )
+
+watch(
+    () => dataSource1.value,
+    (newV: any) => {
+        if(form.value.StatTypeId=== 'temp2'){
+          Object.keys(newV[0]).filter(v => v!== 'params').forEach(j => {
+            newV[2][j] = divisionNum( newV[0][j],  newV[1][j])
+          })
+        }
+    },
+    {deep: true}
+)
+
+defineExpose({
+    dataSource1,
+    columns1,
+    tempProps
+})
 
 
 

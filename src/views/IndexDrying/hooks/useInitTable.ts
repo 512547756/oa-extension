@@ -28,20 +28,20 @@ export default function useInitTable(datas: DatesType[] | undefined, col: ColTyp
   
   const dataSource: any = ref(datas?.map((item) => {
     const dataTemp = {
-      hs: undefined,
-      jb: undefined,
-      zh: undefined,
-      bl: undefined,
-      yz: undefined,
-      fh: undefined,
-      yy: undefined,
-      cx: undefined,
-      nh: undefined,
-      xs: undefined,
-      qwxq: undefined,
-      gxq: undefined,
-      dqh: undefined,
-      qshj: undefined
+      HS: undefined,
+      JB: undefined,
+      ZH: undefined,
+      BL: undefined,
+      YZ: undefined,
+      FH: undefined,
+      YY: undefined,
+      CX: undefined,
+      NH: undefined,
+      XS: undefined,
+      QW: undefined,
+      GX: undefined,
+      DQ: undefined,
+      QS: undefined
     }
     return Object.assign(item, dataTemp)
   }))
@@ -49,59 +49,59 @@ export default function useInitTable(datas: DatesType[] | undefined, col: ColTyp
   const colTemp = [
     { field: 'params', title: '', className: styles.col1 },
     {
-      field: 'hs',
+      field: 'HS',
       title: '海曙'
     },
     {
-      field: 'jb',
+      field: 'JB',
       title: '江北'
     },
     {
-      field: 'zh',
+      field: 'ZH',
       title: '镇海'
     },
     {
-      field: 'bl',
+      field: 'BL',
       title: '北仑'
     },
     {
-      field: 'yz',
+      field: 'YZ',
       title: '鄞州'
     },
     {
-      field: 'fh',
+      field: 'FH',
       title: '奉化'
     },
     {
-      field: 'yy',
+      field: 'YY',
       title: '余姚'
     },
     {
-      field: 'cx',
+      field: 'CX',
       title: '慈溪'
     },
     {
-      field: 'nh',
+      field: 'NH',
       title: '宁海'
     },
     {
-      field: 'xs',
+      field: 'XS',
       title: '象山'
     },
     {
-      field: 'qwxq',
+      field: 'QW',
       title: '前湾新区'
     },
     {
-      field: 'gxq',
+      field: 'GX',
       title: '高新区'
     },
     {
-      field: 'dqh',
+      field: 'DQ',
       title: '东钱湖'
     },
     {
-      field: 'qshj',
+      field: 'QS',
       title: '全市合计'
     }
   ]

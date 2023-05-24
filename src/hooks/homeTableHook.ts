@@ -1,5 +1,5 @@
 import { ref, computed, onMounted } from 'vue'
-export default function finishDataHook() {
+export default function homeTableHook() {
   const inputData: any = {
     HS: '',
     JB: '',
@@ -18,9 +18,9 @@ export default function finishDataHook() {
   }
   const jidu = ['一', '二', '三', '四']
 
-  const target: any = {}
-  const complete: any = {}
-  const rate: any = {}
+  let target: any = [{}]
+  let complete: any = [{}]
+  let rate: any = [{}]
 
   const sumList: any = ref([{}])
 
@@ -513,10 +513,11 @@ export default function finishDataHook() {
     sumList.value = []
     // console.log('(listTable[0].ListData)[0].DetailList', (listTable[0].ListData)[0].DetailList)
     // const list = (listTable[0].ListData)[0].DetailList
-    console.log('data', data)
     for (const [i, list] of data.entries()) {
-      for (const [index, item] of list.DetailList.entries()) {
-
+      complete = {}
+      target = {}
+      rate = {}
+      for (const [index, item] of (list.DetailList).entries()) {
         target[item.DtCountyId] = item.DtTaregtValue
         complete[item.DtCountyId] = item.DtCompletevalue
         rate[item.DtCountyId] = item.DtCompleterate
@@ -534,11 +535,16 @@ export default function finishDataHook() {
             // rate.title = jidu[Number(item.DtMonth.substring(4, 6)) - 1] + "季度完成率"
             break
           }
+          case 5: {
+            target.title = "目标值"
+            complete.title = "完成值"
+            // rate.title = jidu[Number(item.DtMonth.substring(4, 6)) - 1] + "季度完成率"
+            break
+          }
         }
       }
-      console.log('data[i]', data[i])
       sumList.value[i] = {
-        Id: data[i].Id,
+        Id: i + 1,
         StatTask: data[i].StatTask,
         StatOrgName: data[i].StatOrgName,
         StatConcertUserName: data[i].StatConcertUserName,
@@ -549,6 +555,12 @@ export default function finishDataHook() {
       switch (data[i].StatTypeId) {
         case 3: {
           // sumList.value[i].finishInfo.push(target)
+          sumList.value[i].finishInfo.push(complete)
+          // sumList.value[i].finishInfo.push(rate)
+          break
+        }
+        case 5: {
+          sumList.value[i].finishInfo.push(target)
           sumList.value[i].finishInfo.push(complete)
           // sumList.value[i].finishInfo.push(rate)
           break
@@ -565,10 +577,11 @@ export default function finishDataHook() {
 
   let currentIndex = 0
   const getMergeCells = (data: any) => {
+    historyRow = 0
+    newIndex = 0
     newDataSource.value = []
     mergeIndex = 0
     // mergeCells.value = 
-    console.log('data', data)
 
     // antTable
     // dataSource.value = []
@@ -579,7 +592,6 @@ export default function finishDataHook() {
 
     for (const [index, value] of data.entries()) {
       currentIndex += 1
-      console.log('value', value)
       // 获取finishInfo长度
       const finishInfoLength = Object.keys(value.finishInfo).length
 
@@ -592,7 +604,7 @@ export default function finishDataHook() {
       // console.log('dataSource.value[index].finishInfo', dataSource.value[index].finishInfo)
       for (const [index2, item] of value.finishInfo.entries()) {
         const a = {
-          index: currentIndex,
+          index: value.Id,
           StatTask: value.StatTask,
           finishInfo: item.title,
           StatTypeId: value.StatTypeId,
@@ -606,7 +618,6 @@ export default function finishDataHook() {
         newDataSource.value[newIndex] = a
         newIndex += 1
       }
-      console.log('newDataSource', newDataSource.value)
       if (pageLength + finishInfoLength > 10) {
         pageSizeChangeList.push(pageLength)
         pageLength = finishInfoLength

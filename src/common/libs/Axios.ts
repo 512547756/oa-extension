@@ -27,6 +27,7 @@ class HttpRequest {
     return this.request<T>({
       url,
       method: 'post',
+      headers: {'Content-Type': 'multipart/form-data'},
       data,
       ...config
     })

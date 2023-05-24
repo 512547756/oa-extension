@@ -23,6 +23,10 @@ export default defineComponent({
     footerMethod: {
         type: Function,
         default: undefined
+    },
+    disabledRow: {
+        type: Array,
+        default: () => []
     }
   },
   setup(props) {
@@ -32,6 +36,9 @@ export default defineComponent({
         // const hasValue = Object.keys(row).every(item => {return (row[item] ?? '')!== '' })
         if(row.params === '全年目标值' && props.hasFullYearTarget) {
             return false
+        }
+        if(props.disabledRow.includes(row.params)) {
+            return false  
         }
         return true
     }

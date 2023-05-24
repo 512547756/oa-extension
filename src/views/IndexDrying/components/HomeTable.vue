@@ -5,7 +5,8 @@
     <!-- <a-button>导出</a-button> -->
     <a-button>删除</a-button>
     <!-- {{ newDataSource }} -->
-    <vxe-table :data="newDataSource" :merge-cells="mergeCells" border @cell-click="cellClickEvent">
+    {{ mergeCells }}{{ newDataSource }}
+    <vxe-table :data="newDataSource" :merge-cells="mergeCells2" border @cell-click="cellClickEvent">
       <!-- <vxe-column type="seq" width="60"></vxe-column> -->
       <vxe-column v-for="(item, index) in columns" :key="index" :field="item.key" :title="item.title"></vxe-column>
     </vxe-table>
@@ -30,6 +31,7 @@ import { defineComponent, ref, onMounted, reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import homeTableHook from '@/hooks/homeTableHook'
 import type { VxeGridProps, VxePagerEvents } from 'vxe-table'
+import type { VxeTablePropTypes } from 'vxe-table'
 import { getIndexDryingList } from '@/api/IndexDrying/index'
 
 export default defineComponent({
@@ -53,18 +55,22 @@ export default defineComponent({
       let res = await getIndexDryingList(data)
       //    let res1 = await getIndexDryingDetail(21)
       //    let res1 = await getIndexDryingWorkList(data)
-      console.log('res', res)
+      // listData.value = res.ListData
       listData.value = res.ListData
-      console.log('listData.value', listData.value)
       getMergeCells(jisuan2(listData.value))
     }
 
-    queryData({ pageIndex: 1, pageSize: 10, keyword: '', })
+    onMounted(() => {
+      queryData({ pageIndex: tablePage.value.currentPage, pageSize: tablePage.value.pageSize, keyword: '', })
+    })
+
 
     const findList = () => {
       // 模拟后台接口
-      // loading.value = true
+      loading.value = true
       queryData({ pageIndex: tablePage.value.currentPage, pageSize: tablePage.value.pageSize, keyword: '', })
+      // listData.value = listData.value = [{ "index": 1, "StatTask": "保持房地产市场平稳健康发展", "StatTypeId": 5, "StatOrgName": "物业房管处", "StatOrgUserName": "陈寿旦", "StatConcertUserName": "城市建设处", "Id": 1, "_X_ROW_KEY": "row_37" }, { "index": 1, "StatTask": "保持房地产市场平稳健康发展", "StatTypeId": 5, "StatOrgName": "物业房管处", "StatOrgUserName": "陈寿旦", "StatConcertUserName": "城市建设处", "Id": 1, "_X_ROW_KEY": "row_38" },]
+
       loading.value = false
       // setTimeout(() => {
       //   getMergeCells(dataSource.value)
@@ -73,15 +79,16 @@ export default defineComponent({
       // }, 200)
     }
     const handlePageChange = (currentPage: any, pageSize: any) => {
-      console.log('currentPage', currentPage.currentPage)
       tablePage.value.currentPage = currentPage.currentPage
       tablePage.value.pageSize = currentPage.pageSize
       findList()
     }
 
-
-    const { columns, newDataSource, dataSource, mergeCells, loading, pageLength, getMergeCells, changePage, jisuan2 } =
+    const { columns, newDataSource, mergeCells, loading, pageLength, getMergeCells, changePage, jisuan2 } =
       homeTableHook()
+
+    const mergeCells2 = ref<VxeTablePropTypes.MergeCells>(mergeCells)
+
 
     const add = () => {
       router.push({ name: 'IndexDrying' })
@@ -123,6 +130,7 @@ export default defineComponent({
       columns,
       newDataSource,
       mergeCells,
+      mergeCells2,
       // dataSource,
       pageLength,
       add,

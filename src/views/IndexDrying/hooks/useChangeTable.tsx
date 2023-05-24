@@ -8,7 +8,37 @@ interface TempObj {
   editRender?: Function // 编辑渲染方法
   footerMethod?: Function //表尾渲染方法
   hasFullYearTarget?: boolean // 是否有全年目标
+  disabledRow?: any // 是否禁用此行
 }
+
+  // 用来计算算完成率
+ export const divisionNum = (a: string, b: string) => {
+    const res = Number(b) / Number(a)
+    return isNaN(res) ? '-' : (res * 100).toFixed(1) + '%'
+  }
+
+
+
+  const queryWriteMonthStr = () => {
+    const month = dayjs().get('month')
+    return (month === 0 ? 12 : month) + '月'
+  }
+
+  // 表尾
+export const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
+    console.log(columns)
+    return [
+      columns.map((column, columnIndex) => {
+        if (columnIndex === 0) {
+          return queryWriteMonthStr() + '完成率'
+        }
+        if (data[0][column.field] && data[1][column.field]) {
+          return divisionNum(data[0][column.field], data[1][column.field])
+        }
+        return '-'
+      })
+    ]
+  }
 
 export default function useChangeTable(tempType: string) {
   const cellFormatter = ({ row, column, rowIndex }: any, temp3: boolean = false) => {
@@ -22,6 +52,18 @@ export default function useChangeTable(tempType: string) {
     }
     return `${row[column.field] || ''}`
   }
+
+  const cellFormatter1 =  ({ row, column, rowIndex }: any) => {
+    if(rowIndex === 2 && !row[column.field]) {
+        return <span style={{ color: '#c0c4cc' }}>-</span>
+    }
+    if (!row[column.field]) {
+        // 如果没有数据
+        return <span style={{ color: '#c0c4cc' }}>请编辑</span>
+    }
+    return `${row[column.field]}`
+  }
+
 
   // temp3 需要的编辑逻辑
   const editRender1 = (info: any) => {
@@ -55,32 +97,6 @@ export default function useChangeTable(tempType: string) {
     return <a-input v-model:value={data[_rowIndex][column.field]}></a-input>
   }
 
-  // 用来计算算完成率
-  const divisionNum = (a: string, b: string) => {
-    const res = Number(b) / Number(a)
-    return isNaN(res) ? '-' : (res * 100).toFixed(1) + '%'
-  }
-
-  // 表尾
-  const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
-    return [
-      columns.map((column, columnIndex) => {
-        if (columnIndex === 0) {
-          return queryWriteMonthStr() + '完成率'
-        }
-        if (data[0][column.property] && data[1][column.property]) {
-          return divisionNum(data[0][column.property], data[1][column.property])
-        }
-        return '-'
-      })
-    ]
-  }
-
-  const queryWriteMonthStr = () => {
-    const month = dayjs().get('month')
-    return (month === 0 ? 12 : month) + '月'
-  }
-
   const tempStrategy: Record<string, TempObj> = {
     temp1: {
       datas: [
@@ -96,14 +112,16 @@ export default function useChangeTable(tempType: string) {
       editRender
     },
     temp2: {
-      datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成值' }],
+      datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成值' }, { params: queryWriteMonthStr() + '完成率' }
+    ],
       column: {
         editRender: {},
-        slots: { edit: 'edit', default: cellFormatter }
+        slots: { edit: 'edit', default: cellFormatter1 }
       },
       hasFullYearTarget: false,
+      disabledRow: [`${queryWriteMonthStr()}完成率`],
       editRender,
-      footerMethod
+    //   footerMethod
     },
     temp3: {
       datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成情况' }],
