@@ -64,13 +64,10 @@
     </a-card>
 
     <a-card title="往期数据">
-      <last-detail></last-detail>
+      <last-detail :detailList="detailList" :lastColumns="lastColumns"></last-detail>
     </a-card>
 
     <a-card v-if="!disable" title="完成情况">
-      <!-- <complicated-table></complicated-table> -->
-      <!-- <TableFromOne v-if="MetricType == '1'" />
-      <TableFromTwo v-if="MetricType == '2'" /> -->
       <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
       <!-- 点评备注 -->
       <a-form :model="textArea" :label-col="{ span: 4 }" :wrapper-col="{ span: 13 }" style="margin-top: 15px">
@@ -93,6 +90,7 @@ import TableTemp from './components/tableTemp'
 import workslist from './components/workList.json'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
 import useChangeTable, {divisionNum} from './hooks/useChangeTable'
+import lastDataHook from '@/hooks/lastDetailHook'
 import { useRoute, useRouter } from 'vue-router'
 import storageImg from '@/assets/storage.png'
 import forwardImg from '@/assets/forward.png'
@@ -114,10 +112,18 @@ const router = useRouter()
 
 const formRef = ref()
 
+const detailList = ref()
+
+const { columns: lastColumns, taskList } = lastDataHook()
 const getListInfo = async (data: any) => {
   if (router.currentRoute.value.path !== '/IndexDrying') {
     let res = await getIndexDryingDetail(data)
+    console.log('getIndexDryingDetail-res', res)
     form.value = res
+    console.log('form.value', form.value.OtherList)
+    detailList.value = taskList(form.value)
+    // detailList.value = [{ ZH: '1' }]
+    console.log('detailList.value', detailList.value)
   }
 }
 
