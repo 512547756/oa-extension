@@ -5,8 +5,8 @@
     <!-- <a-button>导出</a-button> -->
     <a-button>删除</a-button>
     <!-- {{ newDataSource }} -->
-    {{ mergeCells }}{{ newDataSource }}
-    <vxe-table :data="newDataSource" :merge-cells="mergeCells2" border @cell-click="cellClickEvent">
+    {{ mergeCells2 }}{{ newDataSource }}
+    <vxe-table ref="vxetable" :data="newDataSource" :merge-cells="mergeCells2" border @cell-click="cellClickEvent">
       <!-- <vxe-column type="seq" width="60"></vxe-column> -->
       <vxe-column v-for="(item, index) in columns" :key="index" :field="item.key" :title="item.title"></vxe-column>
     </vxe-table>
@@ -45,7 +45,7 @@ export default defineComponent({
     const listData = ref()
     const tablePage = ref({
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 2,
       total: 10
     })
 
@@ -53,6 +53,7 @@ export default defineComponent({
     // 获取表格数据
     const queryData = async (data: any) => {
       let res = await getIndexDryingList(data)
+      console.log('res', res)
       //    let res1 = await getIndexDryingDetail(21)
       //    let res1 = await getIndexDryingWorkList(data)
       // listData.value = res.ListData
@@ -60,12 +61,17 @@ export default defineComponent({
       getMergeCells(jisuan2(listData.value))
     }
 
+    const vxetable = ref()
+
     onMounted(() => {
       queryData({ pageIndex: tablePage.value.currentPage, pageSize: tablePage.value.pageSize, keyword: '', })
     })
 
 
     const findList = () => {
+      console.log('vxetable', vxetable)
+      console.log('mergeCells2', mergeCells2.value)
+      vxetable.value.setMergeCells([{ "row": 0, "col": 2, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 1, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 0, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 2, "rowspan": 2, "colspan": 1 }, { "row": 0, "col": 1, "rowspan": 2, "colspan": 1 }, { "row": 0, "col": 0, "rowspan": 2, "colspan": 1 }])
       // 模拟后台接口
       loading.value = true
       queryData({ pageIndex: tablePage.value.currentPage, pageSize: tablePage.value.pageSize, keyword: '', })
@@ -87,7 +93,7 @@ export default defineComponent({
     const { columns, newDataSource, mergeCells, loading, pageLength, getMergeCells, changePage, jisuan2 } =
       homeTableHook()
 
-    const mergeCells2 = ref<VxeTablePropTypes.MergeCells>(mergeCells)
+    const mergeCells2 = ref<VxeTablePropTypes.MergeCells>([{ "row": 0, "col": 2, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 1, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 0, "rowspan": 0, "colspan": 1 }, { "row": 0, "col": 2, "rowspan": 2, "colspan": 1 }, { "row": 0, "col": 1, "rowspan": 2, "colspan": 1 }, { "row": 0, "col": 0, "rowspan": 2, "colspan": 1 }])
 
 
     const add = () => {
@@ -124,6 +130,7 @@ export default defineComponent({
       // handleTableData()
     })
     return {
+      vxetable,
       tablePage,
       listInfo,
       loading,

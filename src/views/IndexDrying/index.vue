@@ -1,12 +1,21 @@
 <template>
   <div>
     <div v-if="!disable" class="btn">
-      <div class="btn-storage btn-cursor">
-        <img :src="storage" style="width: 15px; height: 15px" /><span>暂存</span>
+      <div class="btn-storage btn-cursor" @click="onCheck(0)">
+        <img :src="storage" style="width: 15px; height: 15px" /><span>提交</span>
       </div>
-      <div class="btn-cursor" @click="onCheck">
+      <div class="btn-cursor" @click="onCheck(1)">
         <img :src="forward" style="width: 15px; height: 12px" /><span>办理</span>
       </div>
+      <div class="btn-cursor" @click="onCheck(2)">
+        <img :src="forward" style="width: 15px; height: 12px" /><span>暂存</span>
+      </div>
+      <!-- <div class="btn-cursor" @click="onCheck1">
+        <img :src="forward" style="width: 15px; height: 12px" /><span>退回</span>
+      </div>
+      <div class="btn-cursor" @click="onCheck2">
+        <img :src="forward" style="width: 15px; height: 12px" /><span>通过</span>
+      </div> -->
     </div>
     <agree-modal v-if="agreeModalVisiable" :agreeModalVisiable="agreeModalVisiable"
       @agreeModalFalse="agreeModalFalse"></agree-modal>
@@ -67,7 +76,7 @@
       <last-detail :detailList="detailList" :lastColumns="lastColumns"></last-detail>
     </a-card>
 
-    <a-card v-if="!disable" title="完成情况">
+    <a-card title="完成情况">
       <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
       <!-- 点评备注 -->
       <a-form :model="textArea" :label-col="{ span: 4 }" :wrapper-col="{ span: 13 }" style="margin-top: 15px">
@@ -89,13 +98,13 @@ import AgreeModal from './components/AgreeModal.vue'
 import TableTemp from './components/tableTemp'
 import workslist from './components/workList.json'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
-import useChangeTable, {divisionNum} from './hooks/useChangeTable'
+import useChangeTable, { divisionNum } from './hooks/useChangeTable'
 import lastDataHook from '@/hooks/lastDetailHook'
 import { useRoute, useRouter } from 'vue-router'
 import storageImg from '@/assets/storage.png'
 import forwardImg from '@/assets/forward.png'
 import { getIndexDryingDetail, indexDryingSubmit } from '@/api/IndexDrying/index'
-import useDataTransform  from './hooks/useDataTransform'
+import useDataTransform from './hooks/useDataTransform'
 
 const disable = computed(() => router.currentRoute.value.path === '/DryingDetail' ? true : false)
 
@@ -117,15 +126,18 @@ const detailList = ref()
 const { columns: lastColumns, taskList } = lastDataHook()
 const getListInfo = async (data: any) => {
   if (router.currentRoute.value.path !== '/IndexDrying') {
-    let res = await getIndexDryingDetail(data)
+    // let res = await getIndexDryingDetail(data)
+    let res = await getIndexDryingDetail({ id: 1 })
     console.log('getIndexDryingDetail-res', res)
     form.value = res
+    form.value.StatTypeId = `temp${res.StatTypeId}`
     console.log('form.value', form.value.OtherList)
     detailList.value = taskList(form.value)
     // detailList.value = [{ ZH: '1' }]
     console.log('detailList.value', detailList.value)
   }
 }
+getListInfo(1)
 
 const textArea = ref<any>({
   comments: '',
@@ -156,9 +168,10 @@ const typeList: any = ref([
 const storage = storageImg
 
 const forward = forwardImg
-let tempProps =  ref({})
+let tempProps = ref({})
 let dataSource1 = ref([])
 let columns1 = ref([])
+let actionType = ref()
 const agreeModalVisiable = ref(false)
 
 const initTable = (tempProps: any) => {
@@ -168,25 +181,45 @@ const initTable = (tempProps: any) => {
 }
 
 /**验证表单事件 */
-const onCheck = async () => {
+const onCheck = async (type: any) => {
+  actionType.value = type
   try {
     const values = await formRef.value.validateFields()
-    agreeModalVisiable.value = true
     const basicInfo = Object.assign(form.value, textArea.value)
     const detailList = {
-        columns: columns1.value,
-        data: dataSource1.value
+      columns: columns1.value,
+      data: dataSource1.value
     }
-    const postData = useDataTransform(basicInfo, detailList, 1)
-    const res = await indexDryingSubmit(postData)
-    console.log(res)
+    // const postData = useDataTransform(basicInfo, detailList, 1, type)
+
+    if (type === 0) {
+      // 填报人填写
+      const postData = useDataTransform(basicInfo, detailList, 1, type)
+      const res = await indexDryingSubmit(postData)
+    }
+
+    agreeModalVisiable.value = true
+
     console.log('Success:', values)
   } catch (errorInfo) {
     console.log('Failed:', errorInfo)
   }
 }
 
-const agreeModalFalse = () => {
+const agreeModalFalse = async (data: any) => {
+  // data: {}
+  if ([1, 2].includes(actionType.value)) {
+    // 处室填写暂存或者办理时
+    const basicInfo = Object.assign(form.value, textArea.value)
+    const detailList = {
+      columns: columns1.value,
+      data: dataSource1.value
+    }
+    const postData = useDataTransform(basicInfo, detailList, 2, actionType.value)
+    postData.idList = data
+    const res = await indexDryingSubmit(postData)
+  }
+  // 处理通过或者拒绝
   agreeModalVisiable.value = false
 }
 
@@ -195,10 +228,11 @@ watch(
   newVal => {
     tempProps.value = useChangeTable(newVal)
     initTable(tempProps.value)
-    if (router.currentRoute.value.path === '/IndexDrying') {
-      tempProps.value = useChangeTable(newVal)
-      initTable(tempProps.value)
-    }
+
+    // if (router.currentRoute.value.path === '/IndexDrying') {
+    //   tempProps.value = useChangeTable(newVal)
+    //   initTable(tempProps.value)
+    // }
   },
   {
     immediate: true
@@ -208,7 +242,7 @@ watch(
   () => disable.value,
   () => {
     if (disable.value) {
-      getListInfo(history.state.params.Id)
+      // getListInfo(history.state.params.Id)
     } else {
       form.value = {
         StatTypeId: 'temp1',
@@ -221,21 +255,21 @@ watch(
 )
 
 watch(
-    () => dataSource1.value,
-    (newV: any) => {
-        if(form.value.StatTypeId=== 'temp2'){
-          Object.keys(newV[0]).filter(v => v!== 'params').forEach(j => {
-            newV[2][j] = divisionNum( newV[0][j],  newV[1][j])
-          })
-        }
-    },
-    {deep: true}
+  () => dataSource1.value,
+  (newV: any) => {
+    if (form.value.StatTypeId === 'temp2') {
+      Object.keys(newV[0]).filter(v => v !== 'params').forEach(j => {
+        newV[2][j] = divisionNum(newV[0][j], newV[1][j])
+      })
+    }
+  },
+  { deep: true }
 )
 
 defineExpose({
-    dataSource1,
-    columns1,
-    tempProps
+  dataSource1,
+  columns1,
+  tempProps
 })
 
 
