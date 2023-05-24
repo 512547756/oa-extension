@@ -1,21 +1,23 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div>
-    <a-modal v-model:visible="visible" title="选择处理步骤和人员" @ok="handleOk" @cancel="handleCancel">
+    <a-modal v-model:visible="visible" title="选择处理步骤和人员" width="800px" @ok="handleOk" @cancel="handleCancel">
       <a-radio checked>请办公室领导阅示</a-radio>
       <a-form :model="textArea" ref="formRef">
         <a-form-item name="StatOrgUserName" :rules="[{ required: true, message: '请选择办公室领导' }]">
           <a-select v-model:value="textArea.StatOrgUserName" :options="typeList"
-            style="margin:10px 40px;width: 400px;"></a-select>
+            style="margin:10px 0;width: 100%;"></a-select>
         </a-form-item>
+        <!-- <a-divider /> -->
+
+      <!-- <a-form-item label="备注" name="remark" :rules="[{ required: false, message: '请输入备注' }]">
+          <a-textarea v-model:value="textArea.remark" placeholder="请输入备注" :rows="2" />
+        </a-form-item>
+        <a-form-item label="信息内容" name="comments" :rules="[{ required: false, message: '请输入信息内容' }]">
+          <a-textarea v-model:value="textArea.remark" placeholder="请输入信息内容" :rows="2" />
+            </a-form-item> -->
       </a-form>
-      <!-- <div style="margin:10px 40px;">
-      </div> -->
-      <a-divider />
-      备注： <a-textarea style="margin:10px 40px;width: 400px;" v-model:value="textArea.remark" placeholder="请输入"
-        :rows="1" />
-      信息内容： <a-textarea style="margin:10px 40px;width: 400px;" v-model:value="textArea.comments" placeholder="请输入"
-        :rows="1" />
+
     </a-modal>
   </div>
 </template>
