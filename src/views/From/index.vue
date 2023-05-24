@@ -1,5 +1,5 @@
 <template>
-  <home-search></home-search>
+  <!-- <home-search></home-search> -->
   <home-table></home-table>
 </template>
 
@@ -9,7 +9,6 @@ import HomeSearch from './components/HomeSearch.vue'
 import HomeTable from './components/HomeTable.vue'
 export default defineComponent({
   components: {
-    HomeSearch,
     HomeTable
   },
   name: 'Home',
