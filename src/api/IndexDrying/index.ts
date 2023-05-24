@@ -3,6 +3,15 @@ import api from '@/common/request/index'
 const indexDryingUrl = 'SevenList/StatTarget'
 
 /**
+ * 获取当前登陆用户
+ * @param 
+ * @returns
+ */
+ export const getUserInfo = () => {
+    return api.get(`${indexDryingUrl}/GetUserJson`, null)
+  }
+
+/**
  * 获取指标列表
  * @param data
  * @returns
@@ -53,5 +62,5 @@ export const indexDryingIsReturn = (data: any) => {
  * @returns
  */
 export const indexDryingSubmit = (data: any) => {
-  return api.post(`${indexDryingUrl}/IsReturn`, data)
+  return api.post(`${indexDryingUrl}/SubmitForm`, data)
 }
