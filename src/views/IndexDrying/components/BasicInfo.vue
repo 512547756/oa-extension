@@ -1,6 +1,5 @@
 <template>
   <a-card title="基础信息">
-    {{ form.metricType }}
     <a-form :rules="rule" :model="form" ref="formRef" labelAlign="right">
       <a-row type="flex" justify="center" :gutter="100">
         <a-col>
@@ -65,10 +64,9 @@
             v-if="!disable"
             label="提示"
             name="startTime"
-            required
             style="margin-right: 18px"
           >
-            <a-input value="请在每个月的1-5日内进行填写" disabled class="text-box"></a-input>
+            <a-input  value="请在每个月的1-5日内进行填写" disabled class="text-box"></a-input>
           </a-form-item>
         </a-col>
       </a-row>

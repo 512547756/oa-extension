@@ -10,6 +10,35 @@ interface TempObj {
   hasFullYearTarget?: boolean // 是否有全年目标
 }
 
+  // 用来计算算完成率
+  const divisionNum = (a: string, b: string) => {
+    const res = Number(b) / Number(a)
+    return isNaN(res) ? '-' : (res * 100).toFixed(1) + '%'
+  }
+
+
+
+  const queryWriteMonthStr = () => {
+    const month = dayjs().get('month')
+    return (month === 0 ? 12 : month) + '月'
+  }
+
+  // 表尾
+export const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
+    console.log(columns)
+    return [
+      columns.map((column, columnIndex) => {
+        if (columnIndex === 0) {
+          return queryWriteMonthStr() + '完成率'
+        }
+        if (data[0][column.property] && data[1][column.property]) {
+          return divisionNum(data[0][column.property], data[1][column.property])
+        }
+        return '-'
+      })
+    ]
+  }
+
 export default function useChangeTable(tempType: string) {
   const cellFormatter = ({ row, column, rowIndex }: any, temp3: boolean = false) => {
     if (!row[column.field]) {
@@ -55,32 +84,6 @@ export default function useChangeTable(tempType: string) {
     return <a-input v-model:value={data[_rowIndex][column.field]}></a-input>
   }
 
-  // 用来计算算完成率
-  const divisionNum = (a: string, b: string) => {
-    const res = Number(b) / Number(a)
-    return isNaN(res) ? '-' : (res * 100).toFixed(1) + '%'
-  }
-
-  // 表尾
-  const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
-    return [
-      columns.map((column, columnIndex) => {
-        if (columnIndex === 0) {
-          return queryWriteMonthStr() + '完成率'
-        }
-        if (data[0][column.property] && data[1][column.property]) {
-          return divisionNum(data[0][column.property], data[1][column.property])
-        }
-        return '-'
-      })
-    ]
-  }
-
-  const queryWriteMonthStr = () => {
-    const month = dayjs().get('month')
-    return (month === 0 ? 12 : month) + '月'
-  }
-
   const tempStrategy: Record<string, TempObj> = {
     temp1: {
       datas: [
@@ -96,14 +99,15 @@ export default function useChangeTable(tempType: string) {
       editRender
     },
     temp2: {
-      datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成值' }],
+      datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成值' }, { params: queryWriteMonthStr() + '完成率' }
+    ],
       column: {
         editRender: {},
         slots: { edit: 'edit', default: cellFormatter }
       },
       hasFullYearTarget: false,
       editRender,
-      footerMethod
+    //   footerMethod
     },
     temp3: {
       datas: [{ params: '全年目标值' }, { params: queryWriteMonthStr() + '完成情况' }],

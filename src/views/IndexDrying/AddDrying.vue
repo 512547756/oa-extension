@@ -20,7 +20,7 @@
       <!-- <complicated-table></complicated-table> -->
       <!-- <TableFromOne v-if="MetricType == '1'" />
       <TableFromTwo v-if="MetricType == '2'" /> -->
-      <index :getMetricType="MetricType"></index>
+      <index ref="detailListRef" :getMetricType="MetricType"></index>
       <!-- 点评备注 -->
       <a-form
         :model="textArea"
@@ -50,6 +50,7 @@ import Index from './index.vue'
 import LastDetail from './components/LastDetail.vue'
 import storageImg from '@/assets/storage.png'
 import forwardImg from '@/assets/forward.png'
+import useDataTransform  from './hooks/useDataTransform'
 export default defineComponent({
   components: {
     BasicInfo,
@@ -62,6 +63,7 @@ export default defineComponent({
   },
   setup() {
     const basicInfoRef = ref()
+    const detailListRef = ref()
     const textArea = ref<any>({
       comments: '',
       remark: ''
@@ -72,6 +74,12 @@ export default defineComponent({
 
     const submit = () => {
       basicInfoRef.value.onCheck()
+      const baseInfo = Object.assign(basicInfoRef.value.form, textArea.value)
+      const detailObj = {
+        data: detailListRef.value.dataSource1,
+        columns: detailListRef.value.columns1
+      }
+      useDataTransform(baseInfo, detailObj, 1)
     }
     const { columns, dataSource, getDataSource } = finishDataHook()
 
@@ -87,6 +95,7 @@ export default defineComponent({
       basicInfoRef,
       submit,
       getMetricType,
+      detailListRef,
       storage,
       forward,
       MetricType

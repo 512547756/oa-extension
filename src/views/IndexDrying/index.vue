@@ -17,11 +17,13 @@ const props = defineProps({
     default: 'temp1'
   }
 })
-let tempProps = {}
+
+
+let tempProps = ref({})
 let dataSource1 = ref([])
 let columns1= ref([])
 
-const initTable = (tempProps: any) => {
+const initTable = (tempProps: any) => {      
     const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
     dataSource1.value = dataSource.value
     columns1.value = columns.value
@@ -29,16 +31,19 @@ const initTable = (tempProps: any) => {
 watch(
   () => props.getMetricType,
   () => {
-    tempProps = useChangeTable(props.getMetricType)
-    console.log(tempProps)
-    initTable(tempProps)
+    tempProps.value = useChangeTable(props.getMetricType)
+    initTable(tempProps.value)
   },
   {
     immediate: true
   }
 )
 
-
+defineExpose({
+    dataSource1,
+    columns1,
+    tempProps
+})
 
 
 
