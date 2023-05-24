@@ -24,11 +24,6 @@
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'WorkFlowStep'">
             <span>{{ getWorkFlowStep(record.WorkFlowStep) }}</span>
-            <!-- <span v-if="record.WorkFlowStep === 1">用户提交</span>
-            <span v-if="record.WorkFlowStep === 2">处室填表</span>
-            <span v-if="record.WorkFlowStep === 3">处长查阅</span>
-            <span v-if="record.WorkFlowStep === 4">办公室查阅</span>
-            <span v-if="record.WorkFlowStep === 5">已通过</span> -->
           </template>
         </template>
       </a-table>
@@ -67,7 +62,7 @@ export default defineComponent({
     const tableData = ref([])
 
     const queryData = async (data: any) => {
-      console.log(data)
+      state.loading = true;
       let res = await getIndexDryingWorkList(data)
       state.loading = false;
       tableData.value = res.ListData
@@ -115,6 +110,7 @@ export default defineComponent({
             children: index + 1 + (pageNo.value - 1) * pageSize.value
           }
         }
+        // customCell: customIndex
       },
       {
         title: '工作任务',
