@@ -510,6 +510,7 @@ export default function finishDataHook() {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const jisuan2 = (data: any) => {
+    sumList.value = []
     // console.log('(listTable[0].ListData)[0].DetailList', (listTable[0].ListData)[0].DetailList)
     // const list = (listTable[0].ListData)[0].DetailList
     console.log('data', data)
@@ -521,6 +522,12 @@ export default function finishDataHook() {
         rate[item.DtCountyId] = item.DtCompleterate
 
         switch (data[i].StatTypeId) {
+          case 2: {
+            target.title = "目标值"
+            complete.title = "完成值"
+            rate.title = "完成率"
+            break
+          }
           case 3: {
             // target.title = jidu[Number(item.DtMonth.substring(4, 6)) - 1] + "季度目标"
             complete.title = "完成情况"

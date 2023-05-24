@@ -2,7 +2,7 @@
   <div>
     <home-search></home-search>
     <!-- <div v-if="listData"> -->
-    <home-table @changeVisiable="changeVisiable" :listData=listData></home-table>
+    <home-table @changeVisiable="changeVisiable"></home-table>
   </div>
   <!-- </div> -->
   <!-- <div v-if="listInfo">
@@ -15,7 +15,6 @@ import { defineComponent, ref, onMounted } from 'vue'
 import HomeSearch from './components/HomeSearch.vue'
 import HomeTable from './components/HomeTable.vue'
 // import jisuan from '@/hooks/jisuan'
-import DryingDetail from './DryingDetail.vue'
 export default defineComponent({
   components: {
     HomeSearch,
@@ -34,9 +33,7 @@ export default defineComponent({
     const back = (visible: any) => {
       TableVisiable.value = visible
     }
-    const listData = ref()
     return {
-      listData,
       TableVisiable,
       listInfo,
       changeVisiable,

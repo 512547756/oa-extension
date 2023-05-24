@@ -5,8 +5,8 @@
       <a-radio checked>请办公室领导阅示</a-radio>
       <a-form :model="textArea" ref="formRef">
         <a-form-item name="StatOrgUserName" :rules="[{ required: true, message: '请选择办公室领导' }]">
-          <select-components v-model:value="textArea.StatOrgUserName" :optionsList="typeList"
-            style="margin:10px 40px;width: 400px;"></select-components>
+          <a-select v-model:value="textArea.StatOrgUserName" :options="typeList"
+            style="margin:10px 40px;width: 400px;"></a-select>
         </a-form-item>
       </a-form>
       <!-- <div style="margin:10px 40px;">
@@ -21,15 +21,11 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, toRefs } from 'vue';
-import SelectComponents from '@/components/SelectComponents.vue';
 export default defineComponent({
   props: {
     agreeModalVisiable: {
       default: false
     }
-  },
-  components: {
-    SelectComponents
   },
   emit: ['agreeModalFalse'],
   setup(props, { emit }) {
@@ -37,11 +33,11 @@ export default defineComponent({
     const visible = ref(agreeModalVisiable.value)
     const formRef = ref()
     const typeList: any = ref([
-      { label: '模版一', value: 'temp1' },
-      { label: '模版二', value: 'temp2' },
-      { label: '模版三', value: 'temp3' },
-      { label: '模版四', value: 'temp4' },
-      { label: '模版五', value: 'temp5' },
+      { label: 'a', value: 'temp1' },
+      { label: 'b', value: 'temp2' },
+      { label: 'c', value: 'temp3' },
+      { label: 'd', value: 'temp4' },
+      { label: 'f', value: 'temp5' },
     ])
     const textArea = ref<any>({
       StatOrgUserName: '',
