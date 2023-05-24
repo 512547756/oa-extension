@@ -1,5 +1,5 @@
 <template>
-  <home-search></home-search>
+  <!-- <home-search></home-search> -->
   <home-table></home-table>
 </template>
 
@@ -10,7 +10,6 @@ import HomeTable from './components/HomeTable.vue'
 import { getIndexDryingWorkList } from '@/api/IndexDrying/index'
 export default defineComponent({
   components: {
-    HomeSearch,
     HomeTable
   },
   name: 'Home',
