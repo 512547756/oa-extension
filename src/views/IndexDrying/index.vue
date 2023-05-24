@@ -1,38 +1,205 @@
 <template>
   <div>
-    <!-- {{ dataSource1 }}{{ columns1 }} -->
-    {{ tempProps }}
-    <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
+    <div v-if="!disable" class="btn">
+      <div class="btn-storage btn-cursor">
+        <img :src="storage" style="width: 15px; height: 15px" /><span>暂存</span>
+      </div>
+      <div class="btn-cursor" @click="onCheck">
+        <img :src="forward" style="width: 15px; height: 12px" /><span>办理</span>
+      </div>
+    </div>
+    <agree-modal v-if="agreeModalVisiable" :agreeModalVisiable="agreeModalVisiable"
+      @agreeModalFalse="agreeModalFalse"></agree-modal>
+    <a-card title="基础信息" class="basicInfo">
+      <a-form :rules="rule" :model="form" ref="formRef" labelAlign="right">
+        <a-row type="flex" justify="center" :gutter="100">
+          <a-col>
+            <a-form-item label="指标类型" name="StatTypeId" required>
+              <a-select v-model:value="form.StatTypeId" :options="typeList" :disabled="disable"
+                placeholder="请选择"></a-select>
+              <!-- <select-components v-model:value="form.StatTypeId" :optionsList="typeList"
+                :disabled="disable"></select-components> -->
+            </a-form-item>
+          </a-col>
+          <a-col>
+            <a-form-item label="工作任务" name="StatTask" required>
+              <a-select v-model:value="form.StatTask" :options="workList" :disabled="disable"
+                placeholder="请选择"></a-select>
+              <!-- <a-select v-model:value="form.StatTask" show-search placeholder="请输入" style="width: 250px"
+              :options="workList" @focus="handleFocus" @blur="handleBlur" @change="handleChange" :disabled="disable">
+            </a-select> -->
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row type="flex" justify="center" :gutter="100">
+          <a-col>
+            <a-form-item label="责任处室" name="StatOrgName" required>
+              <a-input :disabled="disable" v-model:value="form.StatOrgName" placeholder="请输入"
+                style="width: 250px"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col>
+            <a-form-item label="牵头领导" name="StatOrgUserName" required>
+              <a-input :disabled="disable" v-model:value="form.StatOrgUserName" placeholder="请输入"
+                style="width: 250px"></a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row type="flex" justify="center" :gutter="disable ? 420 : 100">
+          <a-col>
+            <a-form-item label="配合处室" name="StatConcertUserName">
+              <a-input :disabled="disable" v-model:value="form.StatConcertUserName" placeholder="请输入"
+                style="width: 250px"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col>
+            <a-form-item v-if="!disable" label="提示" name="startTime">
+              <span style="padding-right: 80px;">请在每个月的1-5日内进行填写</span>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-card>
+
+    <a-card title="往期数据">
+      <last-detail></last-detail>
+    </a-card>
+
+    <a-card v-if="!disable" title="完成情况">
+      <!-- <complicated-table></complicated-table> -->
+      <!-- <TableFromOne v-if="MetricType == '1'" />
+      <TableFromTwo v-if="MetricType == '2'" /> -->
+      <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
+      <!-- 点评备注 -->
+      <a-form :model="textArea" :label-col="{ span: 4 }" :wrapper-col="{ span: 13 }" style="margin-top: 15px">
+        <a-form-item label="点评">
+          <a-textarea v-model:value="textArea.comments" placeholder="请输入" :rows="3" />
+        </a-form-item>
+        <a-form-item label="备注">
+          <a-textarea v-model:value="textArea.remark" placeholder="请输入" :rows="3" />
+        </a-form-item>
+      </a-form>
+    </a-card>
   </div>
 </template>
 
 <script lang="ts" setup name="IndexDryingDetail">
-import { watch, ref } from 'vue'
+import { watch, ref, computed, onMounted } from 'vue'
+import LastDetail from './components/LastDetail.vue'
+import AgreeModal from './components/AgreeModal.vue'
+import TableTemp from './components/tableTemp'
+import workslist from './components/workList.json'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
 import useChangeTable from './hooks/useChangeTable'
-import TableTemp from './components/tableTemp'
-const props = defineProps({
-  getMetricType: {
-    type: String,
-    default: 'temp1'
-  }
+import { useRoute, useRouter } from 'vue-router'
+import storageImg from '@/assets/storage.png'
+import forwardImg from '@/assets/forward.png'
+import { getIndexDryingDetail } from '@/api/IndexDrying/index'
+
+const disable = computed(() => router.currentRoute.value.path === '/DryingDetail' ? true : false)
+
+const form = ref<any>({
+  StatTypeId: 'temp1',
+  // StatTask: '',
+  // StatOrgName: '',
+  // StatOrgUserName: '',
+  // StatConcertUserName: '',
+  // EditName: ''
 })
 
+const router = useRouter()
 
-let tempProps = ref({})
-let dataSource1 = ref([])
-let columns1= ref([])
+const formRef = ref()
 
-const initTable = (tempProps: any) => {      
-    const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
-    dataSource1.value = dataSource.value
-    columns1.value = columns.value
+const getListInfo = async (data: any) => {
+  if (router.currentRoute.value.path !== '/IndexDrying') {
+    let res = await getIndexDryingDetail(data)
+    form.value = res
+  }
 }
+
+const textArea = ref<any>({
+  comments: '',
+  remark: ''
+})
+
+/**验证规则 */
+const rule = ref({
+  StatTypeId: [{ require: true, message: '请选择指标类型', trigger: 'change' }],
+  StatTask: [{ required: true, message: '请选择工作任务' }],
+  StatOrgName: [{ require: true, message: '请选择责任处室', trigger: 'change' }],
+  StatOrgUserName: [{ require: true, message: '请选择牵头领导', trigger: 'change' }],
+  EditName: [{ require: true, message: '请选择填表人', trigger: 'change' }]
+})
+
+// 下拉框过滤
+const workList = ref<any['options']>(workslist)
+
+/**类型列表 */
+const typeList: any = ref([
+  { label: '模版一', value: 'temp1' },
+  { label: '模版二', value: 'temp2' },
+  { label: '模版三', value: 'temp3' },
+  { label: '模版四', value: 'temp4' },
+  { label: '模版五', value: 'temp5' },
+])
+
+const storage = storageImg
+
+const forward = forwardImg
+let tempProps =  ref({})
+let dataSource1 = ref([])
+let columns1 = ref([])
+const agreeModalVisiable = ref(false)
+
+const initTable = (tempProps: any) => {
+  const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
+  dataSource1.value = dataSource.value
+  columns1.value = columns.value
+}
+
+/**验证表单事件 */
+const onCheck = async () => {
+  try {
+    const values = await formRef.value.validateFields()
+    agreeModalVisiable.value = true
+    console.log('Success:', values)
+  } catch (errorInfo) {
+    console.log('Failed:', errorInfo)
+  }
+}
+
+const agreeModalFalse = () => {
+  agreeModalVisiable.value = false
+}
+
 watch(
-  () => props.getMetricType,
-  () => {
-    tempProps.value = useChangeTable(props.getMetricType)
+  () => form.value.StatTypeId,
+  newVal => {
+    tempProps.value = useChangeTable(newVal)
     initTable(tempProps.value)
+    if (router.currentRoute.value.path === '/IndexDrying') {
+      tempProps.value = useChangeTable(form.value.StatTypeId)
+      console.log(tempProps)
+      initTable(tempProps)
+    }
+  },
+  {
+    immediate: true
+  }
+)
+watch(
+  () => disable.value,
+  () => {
+    if (disable.value) {
+      getListInfo(history.state.params.Id)
+    } else {
+      form.value = {
+        StatTypeId: 'temp1',
+      }
+    }
   },
   {
     immediate: true
@@ -78,3 +245,45 @@ defineExpose({
 // qnmbRow.dqh = 3
 // qnmbRow.qshj = 3
 </script>
+<style lang="less">
+.btn {
+  height: 23px;
+  width: 100%;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+  background-color: #ecf4fc;
+  line-height: 24px;
+  font-weight: bold;
+
+  img {
+    margin-right: 3px;
+  }
+}
+
+.basicInfo .ant-select-selector {
+  width: 250px !important;
+}
+
+.btn-storage {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.btn-cursor {
+  cursor: pointer;
+}
+
+.ant-input.ant-input-disabled {
+  background-color: white;
+  color: black;
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background-color: white;
+  color: black;
+}
+</style>

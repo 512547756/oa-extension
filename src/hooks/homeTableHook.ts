@@ -1,5 +1,33 @@
 import { ref, computed, onMounted } from 'vue'
 export default function finishDataHook() {
+  const inputData: any = {
+    HS: '',
+    JB: '',
+    ZH: '',
+    BL: '',
+    YZ: '',
+    FH: '',
+    YY: '',
+    CX: '',
+    NH: '',
+    XS: '',
+    QW: '',
+    GX: '',
+    DQ: '',
+    QS: '',
+  }
+  const jidu = ['一', '二', '三', '四']
+
+  const target: any = {}
+  const complete: any = {}
+  const rate: any = {}
+
+  const sumList: any = ref([{}])
+
+
+
+
+
   /**合并行列 */
   const mergeCells = ref<any>([])
 
@@ -28,7 +56,12 @@ export default function finishDataHook() {
 
   let pageLength = 0
 
+  // antTable计算合并
   const sharedOnCell = (_: any, index: number) => {
+    // console.log('newRowList', newRowList)
+    // if (newRowList[0] !== 1) {
+    //   newRowList.unshift(0)
+    // }
     if (newRowList.includes(index)) {
       rowListIndex = newRowList.findIndex((value: number) => value == index)
       ainclude = Array.from(
@@ -72,9 +105,15 @@ export default function finishDataHook() {
     },
     {
       title: '工作任务',
-      dataIndex: 'workTasks',
-      key: 'workTasks',
+      dataIndex: 'StatTask',
+      key: 'StatTask',
       customCell: sharedOnCell
+    },
+    {
+      title: '负责人',
+      dataIndex: 'StatOrgUserName',
+      key: 'StatOrgUserName',
+      // customCell: sharedOnCell
     },
     {
       title: '完成情况',
@@ -83,100 +122,100 @@ export default function finishDataHook() {
     },
     {
       title: '海曙',
-      dataIndex: 'haiShu',
-      key: 'haiShu'
+      dataIndex: 'HS',
+      key: 'HS'
     },
     {
       title: '江北',
-      dataIndex: 'jiangBei',
-      key: 'jiangBei'
+      dataIndex: 'JB',
+      key: 'JB'
     },
     {
       title: '镇海',
-      dataIndex: 'zhenHai',
-      key: 'zhenHai'
+      dataIndex: 'ZH',
+      key: 'ZH'
     },
     {
       title: '北仑',
-      dataIndex: 'beiLun',
-      key: 'beiLun'
+      dataIndex: 'BL',
+      key: 'BL'
     },
     {
       title: '鄞州',
-      dataIndex: 'yinZhou',
-      key: 'yinZhou'
+      dataIndex: 'YZ',
+      key: 'YZ'
     },
     {
       title: '奉化',
-      dataIndex: 'fengHua',
-      key: 'fengHua'
+      dataIndex: 'FH',
+      key: 'FH'
     },
     {
       title: '余姚',
-      dataIndex: 'yuYao',
-      key: 'yuYao'
+      dataIndex: 'YY',
+      key: 'YY'
     },
     {
       title: '慈溪',
-      dataIndex: 'ciXi',
-      key: 'ciXi'
+      dataIndex: 'CX',
+      key: 'CX'
     },
     {
       title: '宁海',
-      dataIndex: 'ningHai',
-      key: 'ningHai'
+      dataIndex: 'NH',
+      key: 'NH'
     },
     {
       title: '象山',
-      dataIndex: 'xiangShan',
-      key: 'xiangShan'
+      dataIndex: 'XS',
+      key: 'XS'
     },
     {
       title: '前湾新区',
-      dataIndex: 'qianWanXinQu',
-      key: 'qianWanXinQu'
+      dataIndex: 'QW',
+      key: 'QW'
     },
     {
       title: '高新区',
-      dataIndex: 'gaoXinQu',
-      key: 'gaoXinQu'
+      dataIndex: 'GX',
+      key: 'GX'
     },
     {
       title: '东钱湖',
-      dataIndex: 'dongQianHu',
-      key: 'dongQianHu'
+      dataIndex: 'DQ',
+      key: 'DQ'
     },
     {
       title: '全市合计',
-      dataIndex: 'all',
-      key: 'all'
+      dataIndex: 'QS',
+      key: 'QS'
     }
   ])
 
   // const inputData = {
-  //   haiShu: '',
-  //   jiangBei: '',
-  //   zhenHai: '',
-  //   beiLun: '',
-  //   yinZhou: '',
-  //   fengHua: '',
-  //   yuYao: '',
-  //   ciXi: '',
-  //   ningHai: '',
-  //   xiangShan: '',
-  //   qianWanXinQu: '',
-  //   gaoXinQu: '',
-  //   dongQianHu: '',
-  //   all: '',
+  //   HS: '',
+  //   JB: '',
+  //   ZH: '',
+  //   BL: '',
+  //   YZ: '',
+  //   FH: '',
+  //   YY: '',
+  //   CX: '',
+  //   NH: '',
+  //   XS: '',
+  //   QW: '',
+  //   GX: '',
+  //   DQ: '',
+  //   QS: '',
   // }
   /**表内数据 */
   const dataSource = ref<any>([
     {
       id: '1234',
-      workTasks: '实现公租房保障11',
+      StatTask: '实现公租房保障11',
       metricType: '类型一',
-      responsibilityDivision: '轨空处',
-      leaderShip: '小明',
+      StatOrgName: '轨空处',
+      StatOrgUserName: '小明',
       cooperateOffice: '无',
       filerPerson: '张三、李四',
       finishInfo: [
@@ -200,306 +239,374 @@ export default function finishDataHook() {
       ]
     },
     {
-      workTasks: '城市更新223',
+      StatTask: '城市更新223',
       finishInfo: [
         {
           index: '2',
           title: '全年目标值',
-          haiShu: '200',
-          jiangBei: '200',
-          zhenHai: '200',
-          beiLun: '200',
-          yinZhou: '200',
-          fengHua: '200',
-          yuYao: '200',
-          ciXi: '200',
-          ningHai: '200',
-          xiangShan: '200',
-          qianWanXinQu: '200',
-          gaoXinQu: '200',
-          dongQianHu: '200'
+          HS: '200',
+          JB: '200',
+          ZH: '200',
+          BL: '200',
+          YZ: '200',
+          FH: '200',
+          YY: '200',
+          CX: '200',
+          NH: '200',
+          XS: '200',
+          QW: '200',
+          GX: '200',
+          DQ: '200'
         },
         {
           title: '一季度目标值',
-          haiShu: '100',
-          jiangBei: '100',
-          zhenHai: '100',
-          beiLun: '100',
-          yinZhou: '100',
-          fengHua: '100',
-          yuYao: '100',
-          ciXi: '100',
-          ningHai: '100',
-          xiangShan: '100',
-          qianWanXinQu: '100',
-          gaoXinQu: '100',
-          dongQianHu: '100'
+          HS: '100',
+          JB: '100',
+          ZH: '100',
+          BL: '100',
+          YZ: '100',
+          FH: '100',
+          YY: '100',
+          CX: '100',
+          NH: '100',
+          XS: '100',
+          QW: '100',
+          GX: '100',
+          DQ: '100'
         },
         {
           title: '一季度完成值',
-          haiShu: '100',
-          jiangBei: '100',
-          zhenHai: '100',
-          beiLun: '100',
-          yinZhou: '100',
-          fengHua: '100',
-          yuYao: '100',
-          ciXi: '100',
-          ningHai: '100',
-          xiangShan: '100',
-          qianWanXinQu: '100',
-          gaoXinQu: '100',
-          dongQianHu: '100'
+          HS: '100',
+          JB: '100',
+          ZH: '100',
+          BL: '100',
+          YZ: '100',
+          FH: '100',
+          YY: '100',
+          CX: '100',
+          NH: '100',
+          XS: '100',
+          QW: '100',
+          GX: '100',
+          DQ: '100'
         },
         {
           title: '一季度完成率',
-          haiShu: '100%',
-          jiangBei: '100%',
-          zhenHai: '100%',
-          beiLun: '100%',
-          yinZhou: '100%',
-          fengHua: '100%',
-          yuYao: '100%',
-          ciXi: '100%',
-          ningHai: '100%',
-          xiangShan: '100%',
-          qianWanXinQu: '100%',
-          gaoXinQu: '100%',
-          dongQianHu: '100%'
+          HS: '100%',
+          JB: '100%',
+          ZH: '100%',
+          BL: '100%',
+          YZ: '100%',
+          FH: '100%',
+          YY: '100%',
+          CX: '100%',
+          NH: '100%',
+          XS: '100%',
+          QW: '100%',
+          GX: '100%',
+          DQ: '100%'
         }
       ]
     },
     {
-      workTasks: '房地产业工资总额全年目标（增幅%）',
+      StatTask: '房地产业工资总额全年目标（增幅%）',
       // colSpan: 2,
       // customCell: { rowSpan: 2 },
       id: '10000',
-      metricType: '类型二',
-      responsibilityDivision: 'A处',
-      leaderShip: '小红',
-      cooperateOffice: 'C处',
+      StatTypeId: '类型二',
+      StatOrgName: 'A处',
+      StatOrgUserName: '小红',
+      StatConcertUserName: 'C处',
       filerPerson: '无',
       finishInfo: [
         {
           index: '3',
           title: '目标值',
-          haiShu: '8',
-          jiangBei: '8',
-          zhenHai: '8',
-          beiLun: '8',
-          yinZhou: '8',
-          fengHua: '8',
-          yuYao: '8',
-          ciXi: '8',
-          ningHai: '8',
-          xiangShan: '8',
-          qianWanXinQu: '8',
-          gaoXinQu: '8',
-          dongQianHu: '8'
+          HS: '8',
+          JB: '8',
+          ZH: '8',
+          BL: '8',
+          YZ: '8',
+          FH: '8',
+          YY: '8',
+          CX: '8',
+          NH: '8',
+          XS: '8',
+          QW: '8',
+          GX: '8',
+          DQ: '8'
         },
         {
           title: '完成值',
-          haiShu: '80%',
-          jiangBei: '80%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '80%',
+          JB: '80%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         }
       ]
     },
     {
-      workTasks: '加强城市治理',
-      metricType: '类型一',
-      responsibilityDivision: 'C处',
-      leaderShip: '小李',
-      cooperateOffice: '无',
+      StatTask: '加强城市治理',
+      StatTypeId: '类型一',
+      StatOrgName: 'C处',
+      StatOrgUserName: '小李',
+      StatConcertUserName: '无',
       filerPerson: '张三',
       finishInfo: [
         {
           index: '4',
           title: '社区治理创新',
-          haiShu: '78.5%',
-          jiangBei: '83%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '78.5%',
+          JB: '83%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         },
         {
           title: '治理非法商贸市场',
-          haiShu: '92.3%',
-          jiangBei: '95.7%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '92.3%',
+          JB: '95.7%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         },
         {
           title: '城市管理合规化',
-          haiShu: '87.8%',
-          jiangBei: '91.2%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '87.8%',
+          JB: '91.2%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         },
         {
           title: '城市管理智能化',
-          haiShu: '23.7%',
-          jiangBei: '29.1%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '23.7%',
+          JB: '29.1%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         },
         {
           title: '加强执法监管能力建设',
-          haiShu: '15.2%',
-          jiangBei: '20.6%',
-          zhenHai: '80%',
-          beiLun: '80%',
-          yinZhou: '80%',
-          fengHua: '80%',
-          yuYao: '80%',
-          ciXi: '80%',
-          ningHai: '80%',
-          xiangShan: '80%',
-          qianWanXinQu: '80%',
-          gaoXinQu: '80%',
-          dongQianHu: '80%'
+          HS: '15.2%',
+          JB: '20.6%',
+          ZH: '80%',
+          BL: '80%',
+          YZ: '80%',
+          FH: '80%',
+          YY: '80%',
+          CX: '80%',
+          NH: '80%',
+          XS: '80%',
+          QW: '80%',
+          GX: '80%',
+          DQ: '80%'
         }
       ]
     },
     {
-      workTasks: '加强城市治理222',
+      StatTask: '加强城市治理222',
       finishInfo: [
         {
           title: '社区治理创新',
-          haiShu: '78.5%',
-          jiangBei: '83%'
+          HS: '78.5%',
+          JB: '83%'
         },
         {
           title: '治理非法商贸市场',
-          haiShu: '92.3%',
-          jiangBei: '95.7%'
+          HS: '92.3%',
+          JB: '95.7%'
         },
         {
           title: '城市管理合规化',
-          haiShu: '87.8%',
-          jiangBei: '91.2%'
+          HS: '87.8%',
+          JB: '91.2%'
         },
         {
           title: '城市管理智能化',
-          haiShu: '23.7%',
-          jiangBei: '29.1%'
+          HS: '23.7%',
+          JB: '29.1%'
         },
         {
           title: '加强执法监管能力建设',
-          haiShu: '15.2%',
-          jiangBei: '20.6%'
+          HS: '15.2%',
+          JB: '20.6%'
         }
       ]
     },
     {
-      workTasks: '加强城市治理3333',
+      StatTask: '加强城市治理3333',
       finishInfo: [
         {
           title: '社区治理创新',
-          haiShu: '78.5%',
-          jiangBei: '83%'
+          HS: '78.5%',
+          JB: '83%'
         },
         {
           title: '治理非法商贸市场',
-          haiShu: '92.3%',
-          jiangBei: '95.7%'
+          HS: '92.3%',
+          JB: '95.7%'
         },
         {
           title: '城市管理合规化',
-          haiShu: '87.8%',
-          jiangBei: '91.2%'
+          HS: '87.8%',
+          JB: '91.2%'
         },
         {
           title: '城市管理智能化',
-          haiShu: '23.7%',
-          jiangBei: '29.1%'
+          HS: '23.7%',
+          JB: '29.1%'
         },
         {
           title: '加强执法监管能力建设',
-          haiShu: '15.2%',
-          jiangBei: '20.6%'
+          HS: '15.2%',
+          JB: '20.6%'
         }
       ]
     }
   ])
 
-  const getMergeCells = () => {
-    for (const [index, value] of dataSource.value.entries()) {
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const jisuan2 = (data: any) => {
+    sumList.value = []
+    // console.log('(listTable[0].ListData)[0].DetailList', (listTable[0].ListData)[0].DetailList)
+    // const list = (listTable[0].ListData)[0].DetailList
+    console.log('data', data)
+    for (const [i, list] of data.entries()) {
+      for (const [index, item] of list.DetailList.entries()) {
+
+        target[item.DtCountyId] = item.DtTaregtValue
+        complete[item.DtCountyId] = item.DtCompletevalue
+        rate[item.DtCountyId] = item.DtCompleterate
+
+        switch (data[i].StatTypeId) {
+          case 2: {
+            target.title = "目标值"
+            complete.title = "完成值"
+            rate.title = "完成率"
+            break
+          }
+          case 3: {
+            // target.title = jidu[Number(item.DtMonth.substring(4, 6)) - 1] + "季度目标"
+            complete.title = "完成情况"
+            // rate.title = jidu[Number(item.DtMonth.substring(4, 6)) - 1] + "季度完成率"
+            break
+          }
+        }
+      }
+      console.log('data[i]', data[i])
+      sumList.value[i] = {
+        Id: data[i].Id,
+        StatTask: data[i].StatTask,
+        StatOrgName: data[i].StatOrgName,
+        StatConcertUserName: data[i].StatConcertUserName,
+        StatOrgUserName: data[i].StatOrgUserName,
+        StatTypeId: data[i].StatTypeId,
+        finishInfo: []
+      }
+      switch (data[i].StatTypeId) {
+        case 3: {
+          // sumList.value[i].finishInfo.push(target)
+          sumList.value[i].finishInfo.push(complete)
+          // sumList.value[i].finishInfo.push(rate)
+          break
+        }
+      }
+    }
+    // sumList.value.push(dataSource)
+    console.log('sumList.value', sumList.value)
+    return sumList.value
+  }
+
+
+
+
+  let currentIndex = 0
+  const getMergeCells = (data: any) => {
+    newDataSource.value = []
+    mergeIndex = 0
+    // mergeCells.value = 
+    console.log('data', data)
+
+    // antTable
+    // dataSource.value = []
+    // data.value[0] = sumList.value
+    // if (Object.keys(data.value[0].finishInfo).length > 1) {
+    //   rowList.unshift(0)
+    // }
+
+    for (const [index, value] of data.entries()) {
+      currentIndex += 1
+      console.log('value', value)
       // 获取finishInfo长度
       const finishInfoLength = Object.keys(value.finishInfo).length
 
-      mergeCells.value[mergeIndex] = {
-        row: historyRow,
-        col: 2,
-        rowspan: finishInfoLength,
-        colspan: 1
-      }
+      mergeCells.value[mergeIndex] = { row: historyRow, col: 2, rowspan: finishInfoLength, colspan: 1 }
       mergeIndex += 1
-      // mergeCells.value[mergeIndex] = { row: historyRow, col: 1, rowspan: finishInfoLength, colspan: 1 }
-      // mergeIndex += 1
-      // mergeCells.value[mergeIndex] = { row: historyRow, col: 0, rowspan: finishInfoLength, colspan: 1 }
-      // mergeIndex += 1
+      mergeCells.value[mergeIndex] = { row: historyRow, col: 1, rowspan: finishInfoLength, colspan: 1 }
+      mergeIndex += 1
+      mergeCells.value[mergeIndex] = { row: historyRow, col: 0, rowspan: finishInfoLength, colspan: 1 }
+      mergeIndex += 1
       // console.log('dataSource.value[index].finishInfo', dataSource.value[index].finishInfo)
       for (const [index2, item] of value.finishInfo.entries()) {
         const a = {
-          id: value.id,
-          workTasks: value.workTasks,
+          index: currentIndex,
+          StatTask: value.StatTask,
           finishInfo: item.title,
-          metricType: value.metricType,
-          responsibilityDivision: value.responsibilityDivision,
-          leaderShip: value.leaderShip,
-          cooperateOffice: value.cooperateOffice,
+          StatTypeId: value.StatTypeId,
+          StatOrgName: value.StatOrgName,
+          StatOrgUserName: value.StatOrgUserName,
+          StatConcertUserName: value.StatConcertUserName,
           filerPerson: value.filerPerson,
+          Id: value.Id,
           ...item
         }
         newDataSource.value[newIndex] = a
         newIndex += 1
       }
+      console.log('newDataSource', newDataSource.value)
       if (pageLength + finishInfoLength > 10) {
         pageSizeChangeList.push(pageLength)
         pageLength = finishInfoLength
@@ -509,6 +616,7 @@ export default function finishDataHook() {
       historyRow = finishInfoLength + historyRow
       rowList.push(historyRow)
       newRowList = rowList
+      // newRowList.unshift(0)
     }
 
     for (const [index, value] of mergeCells.value.entries()) {
@@ -544,13 +652,16 @@ export default function finishDataHook() {
 
   return {
     loading,
+    dataSource,
     columns,
     pageSize,
     newDataSource,
     mergeCells,
     pageLength,
     getMergeCells,
-    changePage
+    changePage,
+    jisuan2,
+    sumList
     // tableData,
     // pagination,
     // handleTableChange,

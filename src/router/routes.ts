@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'IndexDrying',
         name: 'IndexDrying',
-        component: () => import(`@/views/IndexDrying/AddDrying.vue`)
+        component: () => import(`@/views/IndexDrying/index.vue`)
       },
       {
         path: '/Home',
@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/DryingDetail',
         name: 'DryingDetail',
         props: true,
-        component: () => import(`@/views/IndexDrying/DryingDetail.vue`)
+        component: () => import(`@/views/IndexDrying/index.vue`)
       }
     ]
   }

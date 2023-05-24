@@ -1,34 +1,14 @@
 <template>
   <a-card class="home-table">
-    <!-- <a-button type="primary" @click="add">
-      <plus-outlined style="margin-right: 1px" />
-      新建
-    </a-button> -->
-    <a-select
-      v-model:value="workTasks"
-      placeholder="请输入"
-      :options="WorkList"
-      style="width: 100px"
-    />
+    <a-select v-model:value="workTasks" placeholder="请输入" :options="WorkList" style="width: 100px" />
     <a-button>刷新</a-button>
     <!-- <a-button>导出</a-button> -->
     <a-button>删除</a-button>
     <br /><br />
-
-    <!-- <vxe-table :data="dataSource">
-      <vxe-column type="checkbox" width="60"></vxe-column>
-      <vxe-column v-for="(item, index) in columns" :key="index" :field="item.key" :title="item.title"></vxe-column>
-    </vxe-table> -->
-    <a-table
-      :columns="columns"
-      bordered
-      :data-source="tableData"
-      @change="handleChange"
-      :pagination="{
-        pageSize: 8,
-        total: tableData.length
-      }"
-    >
+    <a-table :columns="columns" bordered :data-source="tableData" :customRow="rowClick" :pagination="{
+      pageSize: 10,
+      total: tableData.length
+    }">
       <template #name="{ text }">
         <a-tooltip :title="text">{{ text }}</a-tooltip>
       </template>
@@ -38,68 +18,43 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
-// import { PlusOutlined } from '@ant-design/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getIndexDryingList } from '@/api/IndexDrying/index'
 // import api from '@/common/request/index'
 import list from './table.json'
 export default defineComponent({
   components: {
     // PlusOutlined
   },
-  name: 'App',
-  data() {
-    return {
-      tableData: list,
-      columns: [
-        { title: '序号', dataIndex: 'id', key: 'id' },
-        { title: '工作任务', dataIndex: 'name', key: 'name' },
-        { title: '责任处室', dataIndex: 'office', key: 'office' },
-        { title: '提交人', dataIndex: 'submitter', key: 'submitter' },
-        { title: '办理时间', dataIndex: 'time', key: 'time' },
-        { title: '文件状态', dataIndex: 'status', key: 'status', customRender: this.renderStatus }
-      ],
-      workTasks: 1,
-      WorkList: [
-        { label: '待办', value: 1 },
-        { label: '已办', value: 2 }
-      ]
-    }
-  },
-  created() {},
-  methods: {
-    handleChange(pagination: any) {
-      console.log('Update pagination:', pagination)
-    },
-    get() {
-      let data = {}
-      // api.get("sevenlist/stressbill/GetTypeList?t=1684651715577&t=1684651715000", data).then((res) => {
-      //   console.log(res)
-      // });
-    }
-  },
   setup() {
     const state = reactive({
       pagination: {}
     })
 
+    const tableData = reactive(list)
+    const WorkList = reactive([
+      { label: '待办', value: 1 },
+      { label: '已办', value: 2 }
+    ])
+    const workTasks = ref(1)
     const columns = reactive([
       {
         title: '序号',
-        dataIndex: 'index',
+        dataIndex: 'id',
         align: 'center',
-        key: 'index'
+        key: 'id'
       },
       {
         title: '工作任务',
-        dataIndex: 'task',
+        dataIndex: 'name',
         align: 'center',
-        key: 'task'
+        key: 'name'
       },
       {
         title: '责任处室',
-        dataIndex: 'department',
+        dataIndex: 'office',
         align: 'center',
-        key: 'department'
+        key: 'office'
       },
       {
         title: '提交人',
@@ -109,9 +64,9 @@ export default defineComponent({
       },
       {
         title: '办理时间',
-        dataIndex: 'handleTime',
+        dataIndex: 'time',
         align: 'center',
-        key: 'handleTime'
+        key: 'time'
       },
       {
         title: '文件状态',
@@ -120,7 +75,18 @@ export default defineComponent({
         key: 'status'
       }
     ])
-
+    const listInfo = ref()
+    /**行点击事件 */
+    const rowClick = (record: any, index: any) => {
+      return {
+        onClick: () => {
+          // console.log(record, index, 2222)
+          listInfo.value = record
+          console.log('record', record)
+          router.push({ name: 'DryingDetail', state: { params: { ...record } } })
+        }
+      }
+    }
     const dataSource = reactive([
       {
         key: '1',
@@ -157,7 +123,12 @@ export default defineComponent({
     }
     return {
       add,
-      dataSource
+      dataSource,
+      rowClick,
+      workTasks,
+      columns,
+      WorkList,
+      tableData
     }
   }
 })

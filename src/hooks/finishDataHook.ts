@@ -3,80 +3,89 @@ export default function finishDataHook() {
   /**列名 */
   const columns = ref<any>([
     {
-      title: '',
+      title: '序号',
       dataIndex: 'index',
       key: 'index',
-      width: 105
+    },
+    {
+      title: '工作任务',
+      dataIndex: 'StatTask',
+      key: 'StatTask',
+    },
+    {
+      title: '完成情况',
+      dataIndex: 'finishInfo',
+      key: 'finishInfo'
     },
     {
       title: '海曙',
-      dataIndex: 'haiShu',
-      key: 'haiShu'
+      dataIndex: 'HS',
+      key: 'HS'
     },
     {
       title: '江北',
-      dataIndex: 'jiangBei',
-      key: 'jiangBei'
+      dataIndex: 'JB',
+      key: 'JB'
     },
     {
       title: '镇海',
-      dataIndex: 'zhenHai',
-      key: 'zhenHai'
+      dataIndex: 'ZH',
+      key: 'ZH'
     },
     {
       title: '北仑',
-      dataIndex: 'beiLun',
-      key: 'beiLun'
+      dataIndex: 'BL',
+      key: 'BL'
     },
     {
       title: '鄞州',
-      dataIndex: 'yinZhou',
-      key: 'yinZhou'
+      dataIndex: 'YZ',
+      key: 'YZ'
     },
     {
       title: '奉化',
-      dataIndex: 'fengHua',
-      key: 'fengHua'
+      dataIndex: 'FH',
+      key: 'FH'
     },
     {
       title: '余姚',
-      dataIndex: 'yuYao',
-      key: 'yuYao'
+      dataIndex: 'YY',
+      key: 'YY'
     },
     {
       title: '慈溪',
-      dataIndex: 'ciXi',
-      key: 'ciXi'
+      dataIndex: 'CX',
+      key: 'CX'
     },
     {
       title: '宁海',
-      dataIndex: 'ningHai',
-      key: 'ningHai'
+      dataIndex: 'NH',
+      key: 'NH'
     },
     {
       title: '象山',
-      dataIndex: 'xiangShan',
-      key: 'xiangShan'
+      dataIndex: 'XS',
+      key: 'XS'
     },
     {
       title: '前湾新区',
-      dataIndex: 'qianWanXinQu',
-      key: 'qianWanXinQu'
+      dataIndex: 'QW',
+      key: 'QW'
     },
     {
       title: '高新区',
-      dataIndex: 'gaoXinQu',
-      key: 'gaoXinQu'
+      dataIndex: 'GX',
+      key: 'GX'
     },
     {
       title: '东钱湖',
-      dataIndex: 'dongQianHu',
-      key: 'dongQianHu'
+      dataIndex: 'DQ',
+      key: 'DQ'
     },
     {
       title: '全市合计',
-      dataIndex: 'all',
-      key: 'all'
+      dataIndex: 'QS',
+      key: 'QS'
     }
   ])
 

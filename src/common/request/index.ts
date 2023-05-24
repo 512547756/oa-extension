@@ -1,7 +1,7 @@
 import Axios from '@/common/libs/Axios'
 import { errorHandler } from './errorHandler'
 // import.meta.env.VITE_APP_SERVER_URL
-const api = new Axios({ baseURL:  ''})
+const api = new Axios({ baseURL: '' })
 
 api.instance.interceptors.request.use(
   (config) => {
@@ -12,7 +12,7 @@ api.instance.interceptors.request.use(
 
 api.instance.interceptors.response.use(
   (res) => {
-    if (res.data.state ==='success') {
+    if (res.data.state === 'success') {
       return res.data.data
     }
 
