@@ -1,25 +1,14 @@
 <template>
   <a-card class="home-table">
-    <a-select
-      v-model:value="workTasks"
-      placeholder="请输入"
-      :options="WorkList"
-      style="width: 100px"
-    />
+    <a-select v-model:value="workTasks" placeholder="请输入" :options="WorkList" style="width: 100px" />
     <a-button>刷新</a-button>
     <!-- <a-button>导出</a-button> -->
     <a-button>删除</a-button>
     <br /><br />
-    <a-table
-      :columns="columns"
-      bordered
-      :data-source="tableData"
-      :customRow="rowClick"
-      :pagination="{
-        pageSize: 10,
-        total: tableData.length
-      }"
-    >
+    <a-table :columns="columns" bordered :data-source="tableData" :customRow="rowClick" :pagination="{
+      pageSize: 10,
+      total: tableData.length
+    }">
       <template #name="{ text }">
         <a-tooltip :title="text">{{ text }}</a-tooltip>
       </template>
@@ -30,6 +19,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getIndexDryingList } from '@/api/IndexDrying/index'
 // import api from '@/common/request/index'
 import list from './table.json'
 export default defineComponent({

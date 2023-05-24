@@ -4,13 +4,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import lastDataHook from '@/hooks/lastDetailHook'
 export default defineComponent({
-  name: 'App',
-  setup() {
-    const dataSource = ref()
+  props: {
+    detailList: {
+      default: () => ([])
+    }
+  },
+  name: 'LastDetail',
+  setup(props) {
+    // const dataSource = ref()
+    const dataSource = computed(() => props.detailList)
     const { columns } = lastDataHook()
+
     return {
       columns,
       dataSource

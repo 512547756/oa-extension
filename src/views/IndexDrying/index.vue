@@ -11,6 +11,7 @@ import { watch, ref } from 'vue'
 import useInitTable from '../IndexDrying/hooks/useInitTable'
 import useChangeTable from './hooks/useChangeTable'
 import TableTemp from './components/tableTemp'
+import { useRoute, useRouter } from 'vue-router'
 const props = defineProps({
   getMetricType: {
     type: String,
@@ -19,19 +20,24 @@ const props = defineProps({
 })
 let tempProps = {}
 let dataSource1 = ref([])
-let columns1= ref([])
+let columns1 = ref([])
 
 const initTable = (tempProps: any) => {
-    const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
-    dataSource1.value = dataSource.value
-    columns1.value = columns.value
+  const { dataSource, columns } = useInitTable(tempProps.datas, tempProps.column)
+  dataSource1.value = dataSource.value
+  columns1.value = columns.value
 }
+const router = useRouter()
 watch(
   () => props.getMetricType,
   () => {
-    tempProps = useChangeTable(props.getMetricType)
-    console.log(tempProps)
-    initTable(tempProps)
+    console.log(router.currentRoute.value.path)
+    if (router.currentRoute.value.path === '/IndexDrying') {
+      tempProps = useChangeTable(props.getMetricType)
+      console.log(tempProps)
+      initTable(tempProps)
+
+    }
   },
   {
     immediate: true
