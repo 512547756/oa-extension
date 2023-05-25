@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 const getDetailList = (detailList: any, StatTypeId: number) => {
     const list = detailList?.columns?.filter((v: any) => v.field!== 'params')?.map((item: any) => {
         const obj = {
@@ -27,7 +29,6 @@ const getDetailList = (detailList: any, StatTypeId: number) => {
         return obj
     })
 
-    console.log(list)
     // detailList.data.forEach((v: any) => {
     //     console.log(detailMap.keys().next().value)
     //     if(v.params === '全年目标值'){
@@ -42,19 +43,20 @@ const getDetailList = (detailList: any, StatTypeId: number) => {
 }
 
 
-export default function useDataTransform(basicInfo: any, detailList: any,status: number, subType: number = 1) {
+export default function useDataTransform(basicInfo: any, detailList: any, subType: number = 1,id: any = undefined) {
     const StatTypeId = +basicInfo.StatTypeId.replace('temp','')
     const DetailList = getDetailList(detailList, StatTypeId)
     const StattargetDto = {
+        Id: id,
         StatTypeId ,
         StatTask: basicInfo.StatTask,
         StatOrgName: basicInfo.StatOrgName,
         StatOrgUserName: basicInfo.StatOrgUserName,
         StatConcertUserName: basicInfo.StatConcertUserName,
-        Status: status,
         StatContent: basicInfo.comments,
         StatRemark : basicInfo.remark,
-        DetailList
+        StatMonth: dayjs().format('YYYYMM'), 
+        DetailList: subType === 0? undefined: DetailList
     }
     const postData: any = {
         subType,

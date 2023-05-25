@@ -27,6 +27,10 @@ export default defineComponent({
     disabledRow: {
         type: Array,
         default: () => []
+    },
+    disabledAll: {
+        type: Boolean,
+        default: false
     }
   },
   setup(props) {
@@ -34,6 +38,9 @@ export default defineComponent({
     const beforeEditMethod = ({ row, rowIndex, column, columnIndex }: any) => {
         // // 全年目标是否有值
         // const hasValue = Object.keys(row).every(item => {return (row[item] ?? '')!== '' })
+        if(props.disabledAll){
+            return false
+        }
         if(row.params === '全年目标值' && props.hasFullYearTarget) {
             return false
         }

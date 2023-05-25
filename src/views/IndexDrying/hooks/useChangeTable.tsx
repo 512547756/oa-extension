@@ -8,7 +8,8 @@ interface TempObj {
   editRender?: Function // 编辑渲染方法
   footerMethod?: Function //表尾渲染方法
   hasFullYearTarget?: boolean // 是否有全年目标
-  disabledRow?: any // 是否禁用此行
+  disabledRow?: any // 禁用的行
+  disabledAll?: boolean // 是否禁用全部
 }
 
   // 用来计算算完成率

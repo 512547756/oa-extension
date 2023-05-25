@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div v-if="!disable" class="btn">
-      <div class="btn-storage btn-cursor" @click="onCheck(0)">
+    <div class="btn">
+      <div class="btn-storage btn-cursor" @click="onCheck(0)" v-if="isSetp1">
         <img :src="storage" style="width: 15px; height: 15px" /><span>提交</span>
       </div>
-      <div class="btn-cursor" @click="onCheck(1)">
+      <div class="btn-cursor" @click="onCheck(1)"  v-if="isSetp2">
         <img :src="forward" style="width: 15px; height: 12px" /><span>办理</span>
       </div>
-      <div class="btn-cursor" @click="onCheck(2)">
+      <div class="btn-cursor" @click="onCheck(2)"  v-if="isSetp2">
         <img :src="forward" style="width: 15px; height: 12px" /><span>暂存</span>
       </div>
-      <!-- <div class="btn-cursor" @click="onCheck1">
+      <div class="btn-cursor"  v-if="isSetp3 || isSetp4">
         <img :src="forward" style="width: 15px; height: 12px" /><span>退回</span>
       </div>
-      <div class="btn-cursor" @click="onCheck2">
-        <img :src="forward" style="width: 15px; height: 12px" /><span>通过</span>
-      </div> -->
+      <div class="btn-cursor" v-if="isSetp3 || isSetp4">
+        <img :src="forward" style="width: 15px; height: 12px" /><span>{{isSetp3?"处理" : "已阅"}}</span>
+      </div>
     </div>
     <agree-modal v-if="agreeModalVisiable" :agreeModalVisiable="agreeModalVisiable"
       @agreeModalFalse="agreeModalFalse"></agree-modal>
@@ -26,17 +26,12 @@
             <a-form-item label="指标类型" name="StatTypeId" required>
               <a-select v-model:value="form.StatTypeId" :options="typeList" :disabled="disable"
                 placeholder="请选择"></a-select>
-              <!-- <select-components v-model:value="form.StatTypeId" :optionsList="typeList"
-                :disabled="disable"></select-components> -->
             </a-form-item>
           </a-col>
           <a-col>
             <a-form-item label="工作任务" name="StatTask" required>
               <a-select v-model:value="form.StatTask" :options="workList" :disabled="disable"
                 placeholder="请选择"></a-select>
-              <!-- <a-select v-model:value="form.StatTask" show-search placeholder="请输入" style="width: 250px"
-              :options="workList" @focus="handleFocus" @blur="handleBlur" @change="handleChange" :disabled="disable">
-            </a-select> -->
             </a-form-item>
           </a-col>
         </a-row>
@@ -72,19 +67,19 @@
       </a-form>
     </a-card>
 
-    <a-card title="往期数据">
+    <!-- <a-card title="往期数据">
       <last-detail :detailList="detailList" :lastColumns="lastColumns"></last-detail>
-    </a-card>
+    </a-card> -->
 
     <a-card title="完成情况">
       <TableTemp v-model:data="dataSource1" v-model:columns="columns1" v-bind="tempProps"></TableTemp>
       <!-- 点评备注 -->
       <a-form :model="textArea" :label-col="{ span: 4 }" :wrapper-col="{ span: 13 }" style="margin-top: 15px">
         <a-form-item label="点评">
-          <a-textarea v-model:value="textArea.comments" placeholder="请输入" :rows="3" />
+          <a-textarea v-model:value="textArea.comments" placeholder="请输入" :rows="3" :disabled="!isSetp2" />
         </a-form-item>
         <a-form-item label="备注">
-          <a-textarea v-model:value="textArea.remark" placeholder="请输入" :rows="3" />
+          <a-textarea v-model:value="textArea.remark" placeholder="请输入" :rows="3"  :disabled="!isSetp2"/>
         </a-form-item>
       </a-form>
     </a-card>
@@ -106,7 +101,8 @@ import forwardImg from '@/assets/forward.png'
 import { getIndexDryingDetail, indexDryingSubmit } from '@/api/IndexDrying/index'
 import useDataTransform from './hooks/useDataTransform'
 
-const disable = computed(() => router.currentRoute.value.path === '/DryingDetail' ? true : false)
+// || !isSetp1.value
+const disable = computed(() => router.currentRoute.value.path === '/DryingDetail' )
 
 const form = ref<any>({
   StatTypeId: 'temp1',
@@ -119,25 +115,27 @@ const form = ref<any>({
 
 const router = useRouter()
 
+const route = useRoute()
+
 const formRef = ref()
 
 const detailList = ref()
 
-const { columns: lastColumns, taskList } = lastDataHook()
-const getListInfo = async (data: any) => {
-  if (router.currentRoute.value.path !== '/IndexDrying') {
-    // let res = await getIndexDryingDetail(data)
-    let res = await getIndexDryingDetail({ id: 1 })
-    console.log('getIndexDryingDetail-res', res)
-    form.value = res
-    form.value.StatTypeId = `temp${res.StatTypeId}`
-    console.log('form.value', form.value.OtherList)
-    detailList.value = taskList(form.value)
-    // detailList.value = [{ ZH: '1' }]
-    console.log('detailList.value', detailList.value)
-  }
-}
-getListInfo(1)
+// const { columns: lastColumns, taskList } = lastDataHook()
+// const getListInfo = async (data: any) => {
+//   if (router.currentRoute.value.path !== '/IndexDrying') {
+//     // let res = await getIndexDryingDetail(data)
+//     let res = await getIndexDryingDetail({ id: 1 })
+//     console.log('getIndexDryingDetail-res', res)
+//     form.value = res
+//     form.value.StatTypeId = `temp${res.StatTypeId}`
+//     console.log('form.value', form.value.OtherList)
+//     detailList.value = taskList(form.value)
+//     // detailList.value = [{ ZH: '1' }]
+//     console.log('detailList.value', detailList.value)
+//   }
+// }
+// getListInfo(1)
 
 const textArea = ref<any>({
   comments: '',
@@ -168,7 +166,7 @@ const typeList: any = ref([
 const storage = storageImg
 
 const forward = forwardImg
-let tempProps = ref({})
+let tempProps = ref<any>({})
 let dataSource1 = ref([])
 let columns1 = ref([])
 let actionType = ref()
@@ -192,13 +190,20 @@ const onCheck = async (type: any) => {
     }
     // const postData = useDataTransform(basicInfo, detailList, 1, type)
 
-    if (type === 0) {
-      // 填报人填写
-      const postData = useDataTransform(basicInfo, detailList, 1, type)
+    if (type === 0 || type === 2) {
+      // 填报人填写 或处室暂存
+      const postData = useDataTransform(basicInfo, detailList, type, route.query?.id)
+      console.log(postData)
       const res = await indexDryingSubmit(postData)
+      
     }
 
-    agreeModalVisiable.value = true
+    if(type === 1) {
+        // step2 处室填写办理
+        agreeModalVisiable.value = true
+    }
+
+    
 
     console.log('Success:', values)
   } catch (errorInfo) {
@@ -207,26 +212,56 @@ const onCheck = async (type: any) => {
 }
 
 const agreeModalFalse = async (data: any) => {
+    console.log(data)
   // data: {}
-  if ([1, 2].includes(actionType.value)) {
-    // 处室填写暂存或者办理时
+  if (isSetp2.value) {
+    // 处室填写办理时
     const basicInfo = Object.assign(form.value, textArea.value)
     const detailList = {
       columns: columns1.value,
       data: dataSource1.value
     }
-    const postData = useDataTransform(basicInfo, detailList, 2, actionType.value)
-    postData.idList = data
-    const res = await indexDryingSubmit(postData)
+    const postData = useDataTransform(basicInfo, detailList, actionType.value, route.query?.id)
+    postData.idList = data.StatOrgUserName.join()
+    await indexDryingSubmit(postData)
   }
   // 处理通过或者拒绝
-  agreeModalVisiable.value = false
 }
+
+// 工作阶段
+const WorkFlowStep = computed(() => {
+    return route.query?.WorkFlowStep || '1'
+})
+
+// 是否是处室填写阶段
+const isSetp1 = computed( () => {
+    return WorkFlowStep.value === '1'
+})
+
+// 是否是处室填写阶段
+const isSetp2 = computed( () => {
+    return WorkFlowStep.value === '2'
+})
+
+// 是否是处长填写阶段
+const isSetp3 = computed( () => {
+    return WorkFlowStep.value === '3'
+})
+
+// 是否是办公室填写阶段
+const isSetp4 = computed( () => {
+    return WorkFlowStep.value === '4'
+})
 
 watch(
   () => form.value.StatTypeId,
   newVal => {
     tempProps.value = useChangeTable(newVal)
+   
+    if(!isSetp2.value){
+        // 如果不是处室填写阶段都不让填写完成情况
+        tempProps.value.disabledAll = true
+    }
     initTable(tempProps.value)
 
     // if (router.currentRoute.value.path === '/IndexDrying') {
@@ -265,12 +300,6 @@ watch(
   },
   { deep: true }
 )
-
-defineExpose({
-  dataSource1,
-  columns1,
-  tempProps
-})
 
 
 

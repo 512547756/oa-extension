@@ -6,7 +6,7 @@
       <a-form :model="textArea" ref="formRef">
         <a-form-item name="StatOrgUserName" :rules="[{ required: true, message: '请选择办公室领导' }]">
           <a-select v-model:value="textArea.StatOrgUserName" :options="typeList"
-            style="margin:10px 0;width: 100%;"></a-select>
+            style="margin:10px 0;width: 100%;"  mode="multiple"></a-select>
         </a-form-item>
         <!-- <a-divider /> -->
 
@@ -31,8 +31,7 @@ export default defineComponent({
   },
   emit: ['agreeModalFalse'],
   setup(props, { emit }) {
-    const { agreeModalVisiable } = toRefs(props)
-    const visible = ref(agreeModalVisiable.value)
+    const visible = ref(props.agreeModalVisiable)
     const formRef = ref()
     const typeList: any = ref([
       { label: 'a', value: 'temp1' },
@@ -42,24 +41,28 @@ export default defineComponent({
       { label: 'f', value: 'temp5' },
     ])
     const textArea = ref<any>({
-      StatOrgUserName: '',
+      StatOrgUserName: [],
       comments: '',
       remark: ''
     })
 
     const handleOk = async (e: MouseEvent) => {
       try {
-        const values = await formRef.value.validateFields()
-        console.log('Success:', values)
+        await formRef.value.validateFields()
         visible.value = false;
-        emit("agreeModalFalse")
+        emit("agreeModalFalse", textArea.value)
+       
       } catch (errorInfo) {
         console.log('Failed:', errorInfo)
       }
     };
     const handleCancel = (e: MouseEvent) => {
+      textArea.value = {
+        StatOrgUserName: [],
+        comments: '',
+        remark: ''
+      }
       visible.value = false;
-      emit("agreeModalFalse")
     };
     return {
       formRef,

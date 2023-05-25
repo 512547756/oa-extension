@@ -15,14 +15,14 @@ export default defineComponent({
   name: 'Home',
   setup() {
     // 获取表格数据
-    const queryData = async (data: any) => {
-      let res = await getIndexDryingWorkList(data)
-      //    let res1 = await getIndexDryingDetail(21)
-      //    let res1 = await getIndexDryingWorkList(data)
-      console.log('res', res)
-    }
+    // const queryData = async (data: any) => {
+    //   let res = await getIndexDryingWorkList(data)
+    //   //    let res1 = await getIndexDryingDetail(21)
+    //   //    let res1 = await getIndexDryingWorkList(data)
+    //   console.log('res', res)
+    // }
 
-    queryData({ pageIndex: 1, pageSize: 1, keyword: '', })
+    // queryData({ pageIndex: 1, pageSize: 1, keyword: '', })
     return {}
   }
 })

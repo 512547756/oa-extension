@@ -18,7 +18,7 @@
       <br /><br />
 
 
-      <a-table :data-source="tableData" :rowKey="record => record.Id" :columns="columns" :loading="loading"
+      <a-table :data-source="tableData" :rowKey="(record: any) => record.Id" :columns="columns" :loading="loading"
         :pagination="false" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :customRow="rowClick">
         <template #bodyCell="{ column, record }">
